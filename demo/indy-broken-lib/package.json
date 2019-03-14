@@ -1,0 +1,8 @@
+{
+  "name": "@jcowman/indy-broken-lib",
+  "version": "1.0.0",
+  "description": "Intentionally broken library to demonstrate an Indy use-case",
+  "author": "Joe Cowman <joe.r.cowman@gmail.com> (http://joecowman.com)",
+  "license": "MIT",
+  "main": "index.js"
+}
