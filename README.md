@@ -1,5 +1,5 @@
 # indy
-An automatic regression identifier for Node modules
+An automatic regression finder for Node modules
 
 **Coming Soon**
 
