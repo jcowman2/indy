@@ -49,7 +49,7 @@
   },
   "config": {
     "commitizen": {
-      "path": "./indy-tool/node_modules/cz-conventional-changelog"
+      "path": "./node_modules/cz-conventional-changelog"
     }
   }
 }
