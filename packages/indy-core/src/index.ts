@@ -1,5 +1,5 @@
-import { spawnSequence } from "./process-fns";
+import Dependent from "./dependent";
 
-spawnSequence(["npm -v", "npm test"], "demo/indy-test-client")
-    .then(() => process.stdout.write("INDY: Process finished successfully!\n"))
-    .catch(() => process.stderr.write("INDY: Process failed.\n"));
+const testClient = new Dependent("demo/indy-test-client", ["npm test"]);
+
+testClient.runTest();
