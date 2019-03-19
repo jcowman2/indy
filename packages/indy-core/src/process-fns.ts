@@ -26,7 +26,7 @@ export const spawnCommand = (command: string, workingDirectory: string) =>
 
         child.stderr.on("data", data => {
             success = false;
-            process.stderr.write(`ERROR: ${data}`); // TODO - collect the stderr and give an option to override
+            process.stderr.write(`ERROR: ${data}`);
         });
 
         child.on("exit", () => {

@@ -1,5 +1,9 @@
 import Dependent from "./dependent";
 
-const testClient = new Dependent("demo/indy-test-client", ["npm test"]);
+const testClient = new Dependent("demo/indy-test-client", {
+    test: ["npm test"]
+});
 
-testClient.runTest();
+testClient.initialize();
+testClient.build();
+testClient.test();
