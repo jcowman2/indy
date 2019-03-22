@@ -100,7 +100,8 @@ export default class Dependent {
         try {
             await spawnSequence(
                 [`npm uninstall ${name}`, `npm i ${dependencyPath}`],
-                this.rootDir
+                this.rootDir,
+                false
             );
             return writeOut(
                 `Dependent's ${name}@${liveVersion} replaced with the staged version.`

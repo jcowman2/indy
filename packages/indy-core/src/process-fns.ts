@@ -6,6 +6,7 @@
  */
 
 import { spawn } from "child_process";
+import { writeErr } from "./io";
 
 /**
  * Spawn a single child process as a promise, with stdin and stdout inherited
@@ -44,14 +45,24 @@ export const spawnCommand = (command: string, workingDirectory: string) =>
  * resolve if they all pass.
  * @param commands The array of command strings to be executed.
  * @param workingDirectory The working directory in which the commands should be executed.
+ * @param bail Whether the process should bail when one command fails. Defaults to true.
  */
-export const spawnSequence = (commands: string[], workingDirectory: string) =>
+export const spawnSequence = (
+    commands: string[],
+    workingDirectory: string,
+    bail: boolean = true
+) =>
     commands.reduce(
         (previous, current) =>
             previous
                 .then(() => spawnCommand(current, workingDirectory))
                 .catch(() => {
-                    throw new Error("Inner process failed.");
+                    if (bail) {
+                        throw new Error("Inner process failed.");
+                    } else {
+                        writeErr("Warning - Inner process failed.");
+                        return spawnCommand(current, workingDirectory);
+                    }
                 }),
         new Promise(res => res())
     );
