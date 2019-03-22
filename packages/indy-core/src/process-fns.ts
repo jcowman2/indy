@@ -6,7 +6,13 @@
  */
 
 import { spawn } from "child_process";
-import { writeErr } from "./io";
+import { writeErr, writeOut } from "./io";
+
+/** Custom error for failed commands. */
+export class CommandError extends Error {
+    /** The name of the command that failed. */
+    public command: string;
+}
 
 /**
  * Spawn a single child process as a promise, with stdin and stdout inherited
@@ -20,22 +26,22 @@ export const spawnCommand = (command: string, workingDirectory: string) =>
 
         const child = spawn(cmdTokens[0], cmdTokens.slice(1), {
             cwd: workingDirectory,
-            stdio: [process.stdin, process.stdout, "pipe"]
+            stdio: [process.stdin, "pipe", "pipe"]
         });
 
-        let success = true;
+        const output = [];
+
+        child.stdout.on("data", data => {
+            output.push(data);
+        });
 
         child.stderr.on("data", data => {
-            success = false;
-            process.stderr.write(`ERROR: ${data}`);
+            output.push(data);
         });
 
-        child.on("exit", () => {
-            if (success) {
-                resolve();
-            } else {
-                reject();
-            }
+        child.on("exit", code => {
+            const resolution = code === 0 ? resolve : reject;
+            resolution({ code, output });
         });
     });
 
@@ -51,18 +57,38 @@ export const spawnSequence = (
     commands: string[],
     workingDirectory: string,
     bail: boolean = true
-) =>
-    commands.reduce(
-        (previous, current) =>
-            previous
-                .then(() => spawnCommand(current, workingDirectory))
-                .catch(() => {
-                    if (bail) {
-                        throw new Error("Inner process failed.");
-                    } else {
-                        writeErr("Warning - Inner process failed.");
-                        return spawnCommand(current, workingDirectory);
-                    }
-                }),
-        new Promise(res => res())
-    );
+) => {
+    if (commands.length === 0) {
+        return Promise.resolve();
+    }
+
+    let commandIndex = 0;
+    const execCommand = cmd =>
+        spawnCommand(cmd, workingDirectory)
+            .then(({ code, output }) => {
+                if (output.length > 0) {
+                    writeOut(output.join(" "));
+                }
+            })
+            .catch(reason => {
+                if (reason.output !== undefined && reason.output.length > 0) {
+                    writeErr(reason.output.join(" "));
+                }
+                if (bail) {
+                    const errorMsg =
+                        reason.output === undefined
+                            ? reason
+                            : `An error occurred during '${cmd}'. See output for more information.`;
+                    const err = new CommandError(errorMsg);
+                    err.command = cmd;
+                    throw err;
+                }
+            })
+            .finally(() => {
+                if (++commandIndex < commands.length) {
+                    return execCommand(commands[commandIndex]);
+                }
+            });
+
+    return execCommand(commands[commandIndex]);
+};

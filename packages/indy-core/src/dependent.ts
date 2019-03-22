@@ -44,7 +44,7 @@ export default class Dependent {
             await spawnSequence(this.initializeCommands, this.rootDir);
             return writeOut("Dependent initialized successfully.");
         } catch (e) {
-            return writeErr("Initialization failed.");
+            return writeErr("Initialization failed.", e);
         }
     }
 
@@ -54,7 +54,7 @@ export default class Dependent {
             await spawnSequence(this.buildCommands, this.rootDir);
             return writeOut("Build successful.");
         } catch (e) {
-            return writeErr("Build failed.");
+            return writeErr("Build failed.", e);
         }
     }
 
@@ -64,7 +64,7 @@ export default class Dependent {
             await spawnSequence(this.testCommands, this.rootDir);
             return writeOut("All tests passed.");
         } catch (e) {
-            return writeErr("One or more tests failed.");
+            return writeErr("One or more tests failed.", e);
         }
     }
 
@@ -101,7 +101,7 @@ export default class Dependent {
             await spawnSequence(
                 [`npm uninstall ${name}`, `npm i ${dependencyPath}`],
                 this.rootDir,
-                false
+                true
             );
             return writeOut(
                 `Dependent's ${name}@${liveVersion} replaced with the staged version.`
