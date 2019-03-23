@@ -1,4 +1,8 @@
 {
     "name": "indy-cli",
-    "version": "0.0.1"
+    "version": "0.0.1",
+    "dependencies": {
+        "commander": "^2.19.0",
+        "indy-core": "^0.0.1"
+    }
 }
