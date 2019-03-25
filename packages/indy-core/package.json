@@ -1,4 +1,15 @@
 {
     "name": "indy-core",
-    "version": "0.0.1"
+    "version": "0.0.1",
+    "description": "An automatic regression finder and hotfix tester for Node modules.",
+    "main": "dist/indy-core.cjs.js",
+    "module": "dist/indy-core.esm.js",
+    "files": [
+        "dist/"
+    ],
+    "types": "dist/src/index.d.ts",
+    "dependencies": {},
+    "scripts": {
+        "build": "rollup -c"
+    }
 }
