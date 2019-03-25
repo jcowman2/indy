@@ -1,8 +1,21 @@
 {
     "name": "indy-cli",
     "version": "0.0.1",
+    "description": "An automatic regression finder and hotfix tester for Node modules.",
+    "main": "dist/indy-cli.cjs.js",
+    "module": "dist/indy-cli.esm.js",
+    "files": [
+        "dist/",
+        "bin/"
+    ],
+    "bin": {
+        "indy": "./bin/indy"
+    },
     "dependencies": {
         "commander": "^2.19.0",
         "indy-core": "^0.0.1"
+    },
+    "scripts": {
+        "build": "rollup -c"
     }
 }
