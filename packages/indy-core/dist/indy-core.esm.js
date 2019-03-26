@@ -31,6 +31,14 @@ function __awaiter(thisArg, _arguments, P, generator) {
     });
 }
 
+class IndyError extends Error {
+    constructor(message, cause) {
+        const msg = cause ? `${message} Caused by: ${cause.message}` : message;
+        super(msg);
+        Object.setPrototypeOf(this, new.target.prototype);
+    }
+}
+
 /**
  * Write a formatted message to the standard output stream.
  * @param msg The message.
@@ -135,7 +143,7 @@ class Dependent {
                 return writeOut("Dependent initialized successfully.");
             }
             catch (e) {
-                return writeErr("Initialization failed.", e);
+                throw new IndyError("Initialization failed.", e);
             }
         });
     }
@@ -147,7 +155,7 @@ class Dependent {
                 return writeOut("Build successful.");
             }
             catch (e) {
-                return writeErr("Build failed.", e);
+                throw new IndyError("Build failed.", e);
             }
         });
     }
@@ -159,7 +167,7 @@ class Dependent {
                 return writeOut("All tests passed.");
             }
             catch (e) {
-                return writeErr("One or more tests failed.", e);
+                throw new IndyError("One or more tests failed.", e);
             }
         });
     }
@@ -176,12 +184,12 @@ class Dependent {
                 pkg = yield import(packagePath);
             }
             catch (e) {
-                return writeErr("Could not resolve a package.json file.", e);
+                throw new IndyError("Could not resolve a package.json file.", e);
             }
             if (pkg === undefined ||
                 pkg.dependencies === undefined ||
                 pkg.dependencies[name] === undefined) {
-                return writeErr("Dependent doesn't have the required dependency.");
+                throw new IndyError("Dependent doesn't have the required dependency.");
             }
             const liveVersion = pkg.dependencies[name];
             try {
@@ -189,22 +197,10 @@ class Dependent {
                 return writeOut(`Dependent's ${name}@${liveVersion} replaced with the staged version.`);
             }
             catch (e) {
-                return writeErr("Could not swap dependency.", e);
+                throw new IndyError("Could not swap dependency.", e);
             }
         });
     }
 }
-
-// const testClient = new Dependent("demo/indy-test-client", {
-//     test: ["npm test"]
-// });
-// testClient.initialize();
-// testClient.build();
-// // testClient.test();
-// testClient.swapDependency(
-//     "@jcowman/indy-broken-lib",
-//     "@jcowman/indy-broken-lib"
-//     // "/Users/joe/Local/GitHub/indy/demo/indy-fixed-lib"
-// );
 
 export { Dependent };

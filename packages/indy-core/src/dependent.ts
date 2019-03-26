@@ -7,6 +7,7 @@
  */
 
 import { join } from "path";
+import { IndyError } from "./errors";
 import { writeErr, writeOut } from "./io";
 import { spawnSequence } from "./process-fns";
 
@@ -44,7 +45,7 @@ export default class Dependent {
             await spawnSequence(this.initializeCommands, this.rootDir);
             return writeOut("Dependent initialized successfully.");
         } catch (e) {
-            return writeErr("Initialization failed.", e);
+            throw new IndyError("Initialization failed.", e);
         }
     }
 
@@ -54,7 +55,7 @@ export default class Dependent {
             await spawnSequence(this.buildCommands, this.rootDir);
             return writeOut("Build successful.");
         } catch (e) {
-            return writeErr("Build failed.", e);
+            throw new IndyError("Build failed.", e);
         }
     }
 
@@ -64,7 +65,7 @@ export default class Dependent {
             await spawnSequence(this.testCommands, this.rootDir);
             return writeOut("All tests passed.");
         } catch (e) {
-            return writeErr("One or more tests failed.", e);
+            throw new IndyError("One or more tests failed.", e);
         }
     }
 
@@ -84,7 +85,7 @@ export default class Dependent {
             );
             pkg = await import(packagePath);
         } catch (e) {
-            return writeErr("Could not resolve a package.json file.", e);
+            throw new IndyError("Could not resolve a package.json file.", e);
         }
 
         if (
@@ -92,7 +93,9 @@ export default class Dependent {
             pkg.dependencies === undefined ||
             pkg.dependencies[name] === undefined
         ) {
-            return writeErr("Dependent doesn't have the required dependency.");
+            throw new IndyError(
+                "Dependent doesn't have the required dependency."
+            );
         }
 
         const liveVersion = pkg.dependencies[name];
@@ -107,7 +110,7 @@ export default class Dependent {
                 `Dependent's ${name}@${liveVersion} replaced with the staged version.`
             );
         } catch (e) {
-            return writeErr("Could not swap dependency.", e);
+            throw new IndyError("Could not swap dependency.", e);
         }
     }
 }

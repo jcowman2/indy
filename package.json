@@ -22,7 +22,7 @@
   "homepage": "https://github.com/jcowman2/indy",
   "main": "dist/index.js",
   "scripts": {
-    "test": "jest"
+    "test": "jest packages"
   },
   "devDependencies": {
     "lerna": "^3.13.1",
