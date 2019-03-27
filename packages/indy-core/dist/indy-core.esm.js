@@ -203,4 +203,4 @@ class Dependent {
     }
 }
 
-export { Dependent };
+export { Dependent, IndyError };

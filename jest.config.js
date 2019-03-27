@@ -3,5 +3,8 @@ module.exports = {
     testEnvironment: "node",
     collectCoverageFrom: [
         "packages/**"
+    ],
+    setupFilesAfterEnv: [
+        "<rootDir>/test/jest-setup.js"
     ]
 };

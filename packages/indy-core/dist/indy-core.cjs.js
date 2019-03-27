@@ -208,3 +208,4 @@ class Dependent {
 }
 
 exports.Dependent = Dependent;
+exports.IndyError = IndyError;

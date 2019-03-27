@@ -1,2 +1,4 @@
 import Dependent from "./dependent";
-export { Dependent };
+import { IndyError } from "./errors";
+
+export { Dependent, IndyError };
