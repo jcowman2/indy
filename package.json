@@ -22,7 +22,9 @@
   "homepage": "https://github.com/jcowman2/indy",
   "main": "dist/index.js",
   "scripts": {
-    "test": "jest packages"
+    "test": "jest packages --coverage",
+    "lint": "node node_modules/tslint/bin/tslint -c tslint.json --format stylish 'packages/*/src/**/*.ts'",
+    "publish-coverage": "cat ./coverage/lcov.info | coveralls"
   },
   "devDependencies": {
     "lerna": "^3.13.1",
