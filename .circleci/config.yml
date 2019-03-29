@@ -29,7 +29,7 @@ jobs:
 
             - run:
                 name: Build Project
-                command: ./node_modules/.bin/lerna run build
+                command: npm run init-build
 
             - run: 
                 name: Run Tests
