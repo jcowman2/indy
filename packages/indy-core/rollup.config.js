@@ -7,6 +7,7 @@ import pkg from "./package.json";
 
 const banner = `/**
 * Indy Core
+* An automatic regression finder, remote bug reproducer, and hotfix tester for Node packages.
 *
 * Copyright (c) Joe Cowman
 * Licensed under MIT License (see https://github.com/jcowman2/indy)
