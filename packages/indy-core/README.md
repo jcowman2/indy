@@ -26,8 +26,8 @@
 class Runner {
     constructor(args?: RunnerArgs)
     load(package: string, args?: RunnerLoadArgs): RunnerFluent
-    loadAll(): Dependent // TODO
-    on(event: RunnerEvent, listener: (data: RunnerEventData) => void): void
+    loadAll(globs?: string[], args?: RunnerLoadArgs): MultipleDependents
+    on(event: RunnerEvent, listener: (data: RunnerEventData) => void): RunnerFluent
 }
 
 interface RunnerArgs: {
@@ -39,17 +39,13 @@ enum RunnerEvent {
     OUTPUT, ERROR, DONE
 }
 
-enum EventCode {
-    ...
-}
-
 interface RunnerEventData {
     eventType: RunnerEvent
-    eventCode: EventCode
+    eventCode: number
     message: string
 }
 
-interface RunnerFluent extends Runner, Dependent {}
+interface RunnerFluent extends Runner, SingleDependent {}
 
 interface DependentScriptStages {
     initCommands: string[]
@@ -62,10 +58,6 @@ interface RunnerLoadArgs extends DependentScriptStages {
 }
 
 interface Dependent {
-    readonly initCommands: string[]
-    readonly buildCommands: string[]
-    readonly testCommands: string[]
-
     async init(commands?: string[]): void
     async build(commands?: string[]): void
     async test(commands?: string[]): void
@@ -80,6 +72,17 @@ interface Dependent {
 
     async trial(args?: DependentTrialArgs): void
     async trialFix(args?: DependentTriaArgs): void
+}
+
+interface SingleDependent extends Dependent {
+    readonly initCommands: string[]
+    readonly buildCommands: string[]
+    readonly testCommands: string[]
+    readonly package: Packagefile
+}
+
+interface MultipleDependents extends Dependent {
+    readonly list: SingleDependent[]
 }
 
 interface DependentTrailArgs {
