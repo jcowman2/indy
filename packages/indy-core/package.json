@@ -8,7 +8,9 @@
         "dist/"
     ],
     "types": "dist/src/index.d.ts",
-    "dependencies": {},
+    "dependencies": {
+        "emittery": "^0.4.1"
+    },
     "scripts": {
         "build": "rollup -c"
     }

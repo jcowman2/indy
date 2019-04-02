@@ -75,11 +75,8 @@ interface Dependent {
     async trialFix(args?: DependentTriaArgs): void
 }
 
-interface SingleDependent extends Dependent {
-    readonly initCommands: string[]
-    readonly buildCommands: string[]
-    readonly testCommands: string[]
-    readonly package: Packagefile
+interface SingleDependent extends Dependent, DependentScriptStages {
+    readonly pkg: Package
 }
 
 interface MultipleDependents extends Dependent {

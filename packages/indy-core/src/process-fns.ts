@@ -9,7 +9,7 @@ import { spawn } from "child_process";
 import { writeErr, writeOut } from "./io";
 
 /** Custom error for failed commands. */
-export class CommandError extends Error {
+class CommandError extends Error {
     /** The name of the command that failed. */
     public command: string;
 }

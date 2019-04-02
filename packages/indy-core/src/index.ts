@@ -5,7 +5,7 @@
  * Licensed under MIT License (see https://github.com/jcowman2/indy)
  */
 
-import Dependent from "./dependent";
 import { IndyError } from "./errors";
+import Dependent from "./oldDependent";
 
 export { Dependent, IndyError };
