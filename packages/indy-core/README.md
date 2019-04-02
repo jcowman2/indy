@@ -36,13 +36,14 @@ interface RunnerArgs: {
 }
 
 enum RunnerEvent {
-    OUTPUT, ERROR, DONE
+    OUTPUT, ERROR
 }
 
 interface RunnerEventData {
     eventType: RunnerEvent
     eventCode: number
     message: string
+    payload?: any
 }
 
 interface RunnerFluent extends Runner, SingleDependent {}
