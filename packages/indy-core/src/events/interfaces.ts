@@ -1,9 +1,9 @@
 import Emittery = require("emittery");
 
-export type RunnerEvent = "ERROR" | "OUTPUT";
+export type RunnerEvent = "debug" | "info" | "warning" | "error";
 
 export interface RunnerEventData {
-    type: RunnerEvent;
+    type: string;
     code: number;
     message: string;
     payload?: any;
@@ -16,6 +16,6 @@ export interface Emitter {
 }
 
 export type TypedEmittery = Emittery.Typed<
-    { OUTPUT: RunnerEventData; ERROR: RunnerEventData },
+    { [key in RunnerEvent]: RunnerEventData },
     RunnerEvent
 >;

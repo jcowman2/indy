@@ -1,4 +1,5 @@
-import { Emitter } from "../events";
+import { Emitter, EVENT_LIST } from "../events";
+import { ProcessManager } from "../process";
 import {
     DependentScriptStages,
     DependentTrialArgs,
@@ -6,7 +7,6 @@ import {
     SingleDependent,
     SingleDependentArgs
 } from "./interfaces";
-import { spawnSequence } from "../process-fns";
 
 export class SingleDependentImpl implements SingleDependent {
     public pkg: Package;
@@ -14,26 +14,26 @@ export class SingleDependentImpl implements SingleDependent {
     public buildCommands: string[];
     public testCommands: string[];
 
-    private rootDir: string;
     private emitter: Emitter;
+    private processManager: ProcessManager;
 
     constructor(args: SingleDependentArgs) {
         this.initCommands = args.initCommands || [];
         this.buildCommands = args.buildCommands || [];
         this.testCommands = args.testCommands || [];
 
-        this.rootDir = args.rootDir;
+        this.processManager = args.processManager;
         this.emitter = args.emitter;
     }
 
     public async init(commands?: string[]) {
-        return Promise.reject("Method not implemented.");
-        // try {
-        //     await spawnSequence(this.initCommands, this.rootDir);
-        //     return writeOut("Dependent initialized successfully.");
-        // } catch (e) {
-        //     throw new IndyError("Initialization failed.", e);
-        // }
+        // TODO: override this.initCommands if commands argument specified
+        try {
+            await this.processManager.spawnSequence(this.initCommands);
+            this.emitter.emit(EVENT_LIST.DEPENDENT_INIT_SUCCESSFUL);
+        } catch (e) {
+            this.emitter.emitAndThrow(EVENT_LIST.DEPENDENT_INIT_FAILED(e));
+        }
     }
 
     public async build(commands?: string[]) {

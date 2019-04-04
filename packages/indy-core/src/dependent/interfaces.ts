@@ -1,4 +1,5 @@
 import { Emitter } from "../events";
+import { ProcessManager } from "../process";
 
 export interface Dependent {
     init(commands?: string[]): Promise<void>;
@@ -36,6 +37,7 @@ export interface MultipleDependents extends Dependent {
 }
 
 export interface SingleDependentArgs extends DependentScriptStages {
+    processManager: ProcessManager;
     rootDir: string;
     emitter: Emitter;
 }

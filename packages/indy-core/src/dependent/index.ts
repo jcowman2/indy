@@ -8,10 +8,11 @@ export {
     Package
 } from "./interfaces";
 
+import { Provider } from "../interfaces";
 import { SingleDependent, SingleDependentArgs } from "./interfaces";
 import { SingleDependentImpl } from "./single-dependent-impl";
 
-// tslint:disable-next-line: variable-name
-export const SingleDependentProvider = (
-    args: SingleDependentArgs
-): SingleDependent => new SingleDependentImpl(args);
+export const singleDependentProvider: Provider<
+    SingleDependentArgs,
+    SingleDependent
+> = args => new SingleDependentImpl(args);
