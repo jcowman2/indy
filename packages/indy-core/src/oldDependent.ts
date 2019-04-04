@@ -7,7 +7,7 @@
  */
 
 import { join } from "path";
-import { IndyError } from "./errors";
+import { IndyError } from "./events/indy-error";
 import { writeErr, writeOut } from "./io";
 import { spawnSequence } from "./process-fns";
 
