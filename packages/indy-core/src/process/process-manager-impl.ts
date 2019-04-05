@@ -28,12 +28,12 @@ export class ProcessManagerImpl implements ProcessManager {
 
             child.stdout.on("data", (data: string) => {
                 output.push(data);
-                this.emitter.emit(EVENT_LIST.SPAWN_COMMAND_STDOUT(data));
+                this.emitter.emit(EVENT_LIST.INFO.SPAWN_COMMAND_STDOUT(data));
             });
 
             child.stderr.on("data", (data: string) => {
                 output.push(data);
-                this.emitter.emit(EVENT_LIST.SPAWN_COMMAND_STDERR(data));
+                this.emitter.emit(EVENT_LIST.ERROR.SPAWN_COMMAND_STDERR(data));
             });
 
             child.on("exit", code => {
@@ -53,12 +53,12 @@ export class ProcessManagerImpl implements ProcessManager {
             this.spawnCommand(cmd)
                 .then(reason => {
                     this.emitter.emit(
-                        EVENT_LIST.DEBUG_SEQUENCE_CMD_COMPLETE(cmd, reason.code)
+                        EVENT_LIST.DEBUG.SEQUENCE_CMD_COMPLETE(cmd, reason.code)
                     );
                 })
                 .catch(reason => {
                     this.emitter.emit(
-                        EVENT_LIST.DEBUG_SEQUENCE_CMD_FAIL(
+                        EVENT_LIST.DEBUG.SEQUENCE_CMD_FAIL(
                             cmd,
                             reason.code,
                             bail
@@ -67,7 +67,7 @@ export class ProcessManagerImpl implements ProcessManager {
 
                     if (bail) {
                         this.emitter.emitAndThrow(
-                            EVENT_LIST.SPAWN_SEQUENCE_BAIL(cmd)
+                            EVENT_LIST.ERROR.SPAWN_SEQUENCE_BAIL(cmd)
                         );
                     }
                 })

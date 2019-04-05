@@ -28,11 +28,14 @@ export class SingleDependentImpl implements SingleDependent {
 
     public async init(commands?: string[]) {
         // TODO: override this.initCommands if commands argument specified
+
         try {
             await this.processManager.spawnSequence(this.initCommands);
-            this.emitter.emit(EVENT_LIST.DEPENDENT_INIT_SUCCESSFUL);
+            this.emitter.emit(EVENT_LIST.INFO.DEPENDENT_INIT_SUCCESSFUL);
         } catch (e) {
-            this.emitter.emitAndThrow(EVENT_LIST.DEPENDENT_INIT_FAILED(e));
+            this.emitter.emitAndThrow(
+                EVENT_LIST.ERROR.DEPENDENT_INIT_FAILED(e)
+            );
         }
     }
 

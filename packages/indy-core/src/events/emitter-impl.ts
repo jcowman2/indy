@@ -19,7 +19,7 @@ export class EmitterImpl implements Emitter {
         if (isEventType(event.type)) {
             this._emitter.emit(event.type, event);
         } else {
-            this.emitAndThrow(EVENT_LIST.EMIT_ILLEGAL_EVENT(event.type));
+            this.emitAndThrow(EVENT_LIST.ERROR.EMIT_ILLEGAL_EVENT(event.type));
         }
     }
 
