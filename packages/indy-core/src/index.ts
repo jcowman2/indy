@@ -18,14 +18,6 @@ export {
     Dependent,
     Package,
     SingleDependent,
-    SingleDependentArgs,
     DependentTrialArgs
 } from "./dependent";
-export { ProcessManager, CommandResult, ProcessManagerArgs } from "./process";
-export {
-    RunnerEvent,
-    RunnerEventData,
-    Emitter,
-    IndyError,
-    EVENT_LIST
-} from "./events";
+export { RunnerEvent, RunnerEventData, IndyError, EVENT_LIST } from "./events";
