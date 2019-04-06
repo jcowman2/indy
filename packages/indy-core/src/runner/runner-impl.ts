@@ -1,7 +1,13 @@
-import { Dependent, DependentScriptStages, SingleDependent } from "./dependent";
-import { RunnerEvent, RunnerEventData } from "./events";
+import { MultipleDependents } from "../dependent";
+import { RunnerEvent, RunnerEventData } from "../events";
+import {
+    IRunner,
+    RunnerArgs,
+    RunnerFluent,
+    RunnerLoadArgs
+} from "./interfaces";
 
-export class Runner {
+export class Runner implements IRunner {
     constructor(args?: RunnerArgs) {
         throw new Error("Not implemented.");
     }
@@ -23,19 +29,4 @@ export class Runner {
     ): RunnerFluent {
         throw new Error("Not implemented.");
     }
-}
-
-export interface RunnerArgs {
-    configLocation?: string;
-    workingDirectory?: string;
-}
-
-export interface RunnerLoadArgs extends DependentScriptStages {
-    path: string;
-}
-
-export interface RunnerFluent extends Runner, SingleDependent {}
-
-export interface MultipleDependents extends Dependent {
-    readonly list: SingleDependent[];
 }
