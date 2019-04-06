@@ -23,7 +23,7 @@ export class EmitterImpl implements Emitter {
         }
     }
 
-    public emitAndThrow(event: RunnerEventData): void {
+    public emitAndThrow(event: RunnerEventData): never {
         this.emit(event);
         throw new IndyError(
             `${event.message} (Code: ${event.code})`,

@@ -9,7 +9,7 @@ export interface Dependent {
     passing(commands?: DependentScriptStages): Promise<void>;
     failing(commands?: DependentScriptStages): Promise<void>;
 
-    swapDependency(name?: string, path?: string): Promise<boolean>;
+    swapDependency(dependency?: string, replacement?: string): Promise<boolean>;
 
     reset(): Promise<void>;
     update(): Promise<boolean>;
@@ -44,4 +44,7 @@ export interface SingleDependentArgs extends DependentScriptStages {
 
 export interface Package {
     // TODO
+    name: string;
+    version: string;
+    dependencies: { [key: string]: string };
 }

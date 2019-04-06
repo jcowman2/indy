@@ -27,6 +27,11 @@ export const EVENT_LIST = {
             code: 111,
             message: `Command (${command}) failed with exit code (${exitCode}). Bail = ${bail}.`,
             type: debug
+        }),
+        SPAWN_COMMAND: (command: string, args: string[], cwd: string) => ({
+            code: 112,
+            message: `Spawning command (${command}) with args (${args}) where cwd = ${cwd}`,
+            type: debug
         })
     },
 
@@ -37,16 +42,56 @@ export const EVENT_LIST = {
             message,
             type: info
         }),
-        DEPENDENT_INIT_SUCCESSFUL: {
+        DEPENDENT_INIT_START: (name: string) => ({
+            code: 201,
+            message: `Initializing ${name}...`,
+            type: info
+        }),
+        DEPENDENT_INIT_SUCCESSFUL: (name: string) => ({
             code: 202,
-            message: "Dependent initalized successfully.",
+            message: `${name} initalized successfully.`,
             type: info
-        },
-        DEPENDENT_BUILD_SUCCESSFUL: {
+        }),
+        DEPENDENT_BUILD_START: (name: string) => ({
+            code: 203,
+            message: `Building ${name}...`,
+            type: info
+        }),
+        DEPENDENT_BUILD_SUCCESSFUL: (name: string) => ({
             code: 204,
-            message: "Dependent built successfully.",
+            message: `${name} built successfully.`,
+            type: info
+        }),
+        DEPENDENT_TEST_START: (name: string) => ({
+            code: 205,
+            message: `Running ${name}'s verification tests...`,
+            type: info
+        }),
+        DEPENDENT_TEST_SUCCESSFUL: (name: string) => ({
+            code: 206,
+            message: `All of ${name}'s verification tests passed!`,
+            type: info
+        }),
+        DEPENDENT_USING_OVERRIDES: {
+            code: 207,
+            message: "Using command overrides.",
             type: info
         },
+        DEPENDENT_SWAP_START: (pkgName: string, dependencyName: string) => ({
+            code: 208,
+            message: `Swapping ${pkgName}'s ${dependencyName} dependency...`,
+            type: info
+        }),
+        DEPENDENT_SWAP_SUCCESSFUL: (
+            pkgName: string,
+            dependencyName: string,
+            originalVersion: string,
+            newVersion: string
+        ) => ({
+            code: 209,
+            message: `${pkgName}'s ${dependencyName} dependency swapped from ${originalVersion} to ${newVersion} successfully.`,
+            type: info
+        }),
         SPAWN_COMMAND_STDOUT: (data: string) => ({
             code: 210,
             message: data,
@@ -76,6 +121,33 @@ export const EVENT_LIST = {
             message: "Initialization failed.",
             type: error,
             cause
+        }),
+        DEPENDENT_BUILD_FAILED: (cause?: Error) => ({
+            code: 402,
+            message: "Build failed.",
+            type: error,
+            cause
+        }),
+        DEPENDENT_TEST_FAILED: (cause?: Error) => ({
+            code: 403,
+            message: "One or more verification tests failed.",
+            type: error,
+            cause
+        }),
+        DEPENDENCY_NOT_FOUND: (pkgName: string, dependencyName: string) => ({
+            code: 404,
+            message: `${pkgName} does not have the required dependency: ${dependencyName}`,
+            type: error
+        }),
+        DEPENDENCY_SWAP_FAILED: (
+            pkgName: string,
+            dependencyName: string,
+            originalVersion: string,
+            desiredVersion: string
+        ) => ({
+            code: 405,
+            message: `${pkgName}'s ${dependencyName} dependency could not be swapped from ${originalVersion} to ${desiredVersion}.`,
+            type: error
         }),
         SPAWN_COMMAND_STDERR: (data: string) => ({
             code: 410,

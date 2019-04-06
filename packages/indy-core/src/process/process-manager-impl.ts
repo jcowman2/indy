@@ -19,8 +19,14 @@ export class ProcessManagerImpl implements ProcessManager {
         return new Promise<CommandResult>((resolve, reject) => {
             const cmdTokens = command.split(" ");
 
-            const child = spawn(cmdTokens[0], cmdTokens.slice(1), {
-                cwd: this.workingDirectory,
+            const cmd = cmdTokens[0];
+            const args = cmdTokens.slice(1);
+            const cwd = this.workingDirectory;
+
+            this.emitter.emit(EVENT_LIST.DEBUG.SPAWN_COMMAND(cmd, args, cwd));
+
+            const child = spawn(cmd, args, {
+                cwd,
                 stdio: [process.stdin, "pipe", "pipe"]
             });
 

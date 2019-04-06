@@ -27,11 +27,15 @@ export class SingleDependentImpl implements SingleDependent {
     }
 
     public async init(commands?: string[]) {
-        // TODO: override this.initCommands if commands argument specified
+        this.emitter.emit(EVENT_LIST.INFO.DEPENDENT_INIT_START(this.pkg.name));
+
+        const useCommands = this._chooseCommands(this.initCommands, commands);
 
         try {
-            await this.processManager.spawnSequence(this.initCommands);
-            this.emitter.emit(EVENT_LIST.INFO.DEPENDENT_INIT_SUCCESSFUL);
+            await this.processManager.spawnSequence(useCommands);
+            this.emitter.emit(
+                EVENT_LIST.INFO.DEPENDENT_INIT_SUCCESSFUL(this.pkg.name)
+            );
         } catch (e) {
             this.emitter.emitAndThrow(
                 EVENT_LIST.ERROR.DEPENDENT_INIT_FAILED(e)
@@ -40,11 +44,37 @@ export class SingleDependentImpl implements SingleDependent {
     }
 
     public async build(commands?: string[]) {
-        return Promise.reject("Method not implemented.");
+        this.emitter.emit(EVENT_LIST.INFO.DEPENDENT_BUILD_START(this.pkg.name));
+
+        const useCommands = this._chooseCommands(this.buildCommands, commands);
+
+        try {
+            await this.processManager.spawnSequence(useCommands);
+            this.emitter.emit(
+                EVENT_LIST.INFO.DEPENDENT_BUILD_SUCCESSFUL(this.pkg.name)
+            );
+        } catch (e) {
+            this.emitter.emitAndThrow(
+                EVENT_LIST.ERROR.DEPENDENT_BUILD_FAILED(e)
+            );
+        }
     }
 
     public async test(commands?: string[]) {
-        return Promise.reject("Method not implemented.");
+        this.emitter.emit(EVENT_LIST.INFO.DEPENDENT_TEST_START(this.pkg.name));
+
+        const useCommands = this._chooseCommands(this.testCommands, commands);
+
+        try {
+            await this.processManager.spawnSequence(useCommands);
+            this.emitter.emit(
+                EVENT_LIST.INFO.DEPENDENT_TEST_SUCCESSFUL(this.pkg.name)
+            );
+        } catch (e) {
+            this.emitter.emitAndThrow(
+                EVENT_LIST.ERROR.DEPENDENT_TEST_FAILED(e)
+            );
+        }
     }
 
     public async passing(commands?: DependentScriptStages) {
@@ -55,8 +85,52 @@ export class SingleDependentImpl implements SingleDependent {
         return Promise.reject("Method not implemented.");
     }
 
-    public async swapDependency(name?: string, path?: string) {
-        return Promise.reject("Method not implemented.");
+    public async swapDependency(dependency?: string, replacement?: string) {
+        this.emitter.emit(
+            EVENT_LIST.INFO.DEPENDENT_SWAP_START(this.pkg.name, dependency)
+        );
+
+        if (
+            !(
+                this.pkg &&
+                this.pkg.dependencies &&
+                this.pkg.dependencies[dependency]
+            )
+        ) {
+            this.emitter.emitAndThrow(
+                EVENT_LIST.ERROR.DEPENDENCY_NOT_FOUND(this.pkg.name, dependency)
+            );
+        }
+
+        const originalVersion = this.pkg.dependencies[dependency];
+
+        try {
+            await this.processManager.spawnSequence(
+                [`npm uninstall ${dependency}`, `npm install ${replacement}`],
+                true
+            );
+
+            const newVersion = this.pkg.dependencies[dependency];
+
+            this.emitter.emit(
+                EVENT_LIST.INFO.DEPENDENT_SWAP_SUCCESSFUL(
+                    this.pkg.name,
+                    dependency,
+                    originalVersion,
+                    newVersion
+                )
+            );
+            return originalVersion !== newVersion;
+        } catch (e) {
+            return this.emitter.emitAndThrow(
+                EVENT_LIST.ERROR.DEPENDENCY_SWAP_FAILED(
+                    this.pkg.name,
+                    dependency,
+                    originalVersion,
+                    replacement
+                )
+            );
+        }
     }
 
     public async reset() {
@@ -73,5 +147,19 @@ export class SingleDependentImpl implements SingleDependent {
 
     public async trialFix(args?: DependentTrialArgs) {
         return Promise.reject("Method not implemented.");
+    }
+
+    /**
+     * Helper function which uses overrides if they exist and reports it,
+     * otherwise just uses the original commands.
+     * @param original The default commands.
+     * @param overrides Any overrides to be used instead of the defaults.
+     */
+    private _chooseCommands(original: string[], overrides: string[]) {
+        if (overrides) {
+            this.emitter.emit(EVENT_LIST.INFO.DEPENDENT_USING_OVERRIDES);
+            return overrides;
+        }
+        return original;
     }
 }

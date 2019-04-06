@@ -12,7 +12,7 @@ export interface RunnerEventData {
 
 export interface Emitter {
     emit(event: RunnerEventData): void;
-    emitAndThrow(event: RunnerEventData): void;
+    emitAndThrow(event: RunnerEventData): never;
 }
 
 export type TypedEmittery = Emittery.Typed<
