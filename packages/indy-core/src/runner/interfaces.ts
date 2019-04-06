@@ -6,12 +6,12 @@ import {
 import { RunnerEvent, RunnerEventData } from "../events";
 
 export interface IRunner {
-    load(pkg: string, args?: RunnerLoadArgs): RunnerFluent;
-    loadAll(globs?: string[], args?: RunnerLoadArgs): MultipleDependents;
-    on(
-        event: RunnerEvent,
-        listener: (data: RunnerEventData) => void
-    ): RunnerFluent;
+    load(pkg: string, args?: RunnerLoadArgs): Promise<RunnerFluent>;
+    loadAll(
+        globs?: string[],
+        args?: RunnerLoadArgs
+    ): Promise<MultipleDependents>;
+    on(event: RunnerEvent, listener: (data: RunnerEventData) => void): this;
 }
 
 export interface RunnerArgs {
@@ -23,4 +23,4 @@ export interface RunnerLoadArgs extends DependentScriptStages {
     path: string;
 }
 
-export interface RunnerFluent extends IRunner, SingleDependent {}
+export type RunnerFluent = SingleDependent & IRunner;
