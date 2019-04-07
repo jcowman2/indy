@@ -1,9 +1,13 @@
+import { DependentConfig } from "../config";
 import { SingleDependent } from "../dependent";
-import { RunnerLoadArgs } from "../runner";
+import { Emitter } from "../events";
+import { ProcessManager } from "../process";
 
 export interface Store {
-    loadDependent(
-        name: string,
-        args?: RunnerLoadArgs
-    ): Promise<SingleDependent>;
+    loadDependent(config: DependentConfig): Promise<SingleDependent>;
+}
+
+export interface StoreArgs {
+    emitter: Emitter;
+    processManager: ProcessManager;
 }

@@ -40,6 +40,7 @@ export interface SingleDependentArgs extends DependentScriptStages {
     processManager: ProcessManager;
     rootDir: string;
     emitter: Emitter;
+    pkg: Package;
 }
 
 export interface Package {

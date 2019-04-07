@@ -1,22 +1,40 @@
-import { MultipleDependents, SingleDependent } from "../dependent";
-import { RunnerEvent, RunnerEventData } from "../events";
-import { Store, storeProvider } from "../store";
+import { ConfigManager, configManagerProvider } from "../config";
 import {
-    IRunner,
-    RunnerArgs,
-    RunnerFluent,
-    RunnerLoadArgs
-} from "./interfaces";
+    Emitter,
+    emitterProvider,
+    RunnerEvent,
+    RunnerEventData
+} from "../events";
+import { ProcessManager, processManagerProvider } from "../process";
+import { Store, storeProvider } from "../store";
+import { IRunner, RunnerArgs, RunnerLoadArgs } from "./interfaces";
 
 export class Runner implements IRunner {
+    public workingDirectory: string;
+
+    private _emitter: Emitter;
+    private _processManager: ProcessManager;
     private _store: Store;
+    private _configManager: ConfigManager;
 
     constructor(args?: RunnerArgs) {
-        this._store = storeProvider();
+        this.workingDirectory = args.workingDirectory || process.cwd();
+
+        this._emitter = emitterProvider();
+        this._processManager = processManagerProvider({
+            emitter: this._emitter,
+            workingDirectory: this.workingDirectory
+        });
+        this._store = storeProvider({
+            emitter: this._emitter,
+            processManager: this._processManager
+        });
+        this._configManager = configManagerProvider();
     }
 
     public async load(pkg: string, args?: RunnerLoadArgs) {
-        const dependent = await this._store.loadDependent(pkg, args);
+        const config = this._configManager.getConfig(pkg, args);
+        const dependent = await this._store.loadDependent(config);
         const combination = Object.assign(dependent, this);
         return combination;
     }
