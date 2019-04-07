@@ -1,10 +1,14 @@
-import { Dependent, IndyError } from "../../dist/indy-core.cjs";
+import { IndyError, Runner } from "../..";
 
 let testClient;
 
 beforeAll(() => {
-    testClient = new Dependent("demo/indy-test-client", {
-        test: ["npm test"]
+    const indy = new Runner();
+    testClient = indy.load("indy-test-client", {
+        path: "./demo/indy-test-client",
+        initCommands: [],
+        buildCommands: [],
+        testCommands: ["npm test"]
     });
 });
 
