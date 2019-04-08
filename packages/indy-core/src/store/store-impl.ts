@@ -8,10 +8,12 @@ import { Store, StoreArgs } from "./interfaces";
 export class StoreImpl implements Store {
     private _processManager: ProcessManager;
     private _emitter: Emitter;
+    private _workingDirectory: string;
 
     constructor(args: StoreArgs) {
         this._emitter = args.emitter;
         this._processManager = args.processManager;
+        this._workingDirectory = args.workingDirectory;
     }
 
     public async loadDependent(
@@ -20,7 +22,11 @@ export class StoreImpl implements Store {
         let packagePath = `<invalid: ${config.path}>`;
 
         try {
-            packagePath = join(config.path, "package.json");
+            packagePath = join(
+                this._workingDirectory,
+                config.path,
+                "package.json"
+            );
             const pkg = await import(packagePath);
 
             const dependent = singleDependentProvider({

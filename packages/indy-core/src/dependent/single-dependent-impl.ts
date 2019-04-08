@@ -10,6 +10,7 @@ import {
 
 export class SingleDependentImpl implements SingleDependent {
     public pkg: Package;
+
     public initCommands: string[];
     public buildCommands: string[];
     public testCommands: string[];
@@ -18,12 +19,14 @@ export class SingleDependentImpl implements SingleDependent {
     private processManager: ProcessManager;
 
     constructor(args: SingleDependentArgs) {
+        this.pkg = args.pkg;
+
         this.initCommands = args.initCommands || [];
         this.buildCommands = args.buildCommands || [];
         this.testCommands = args.testCommands || [];
 
-        this.processManager = args.processManager;
         this.emitter = args.emitter;
+        this.processManager = args.processManager;
     }
 
     public async init(commands?: string[]) {

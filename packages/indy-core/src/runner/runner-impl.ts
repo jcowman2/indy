@@ -17,7 +17,7 @@ export class Runner implements IRunner {
     private _store: Store;
     private _configManager: ConfigManager;
 
-    constructor(args?: RunnerArgs) {
+    constructor(args: RunnerArgs = {}) {
         this.workingDirectory = args.workingDirectory || process.cwd();
 
         this._emitter = emitterProvider();
@@ -27,7 +27,8 @@ export class Runner implements IRunner {
         });
         this._store = storeProvider({
             emitter: this._emitter,
-            processManager: this._processManager
+            processManager: this._processManager,
+            workingDirectory: this.workingDirectory
         });
         this._configManager = configManagerProvider();
     }
@@ -43,8 +44,11 @@ export class Runner implements IRunner {
         return Promise.reject("Not implemented.");
     }
 
-    public on(event: RunnerEvent, listener: (data: RunnerEventData) => void) {
-        throw new Error("Not implemented.");
-        return undefined;
+    public on(
+        event: RunnerEvent,
+        listener: (data: RunnerEventData) => void
+    ): this {
+        this._emitter.on(event, listener);
+        return this;
     }
 }

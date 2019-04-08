@@ -32,14 +32,20 @@ export class ProcessManagerImpl implements ProcessManager {
 
             const output: string[] = [];
 
-            child.stdout.on("data", (data: string) => {
-                output.push(data);
-                this.emitter.emit(EVENT_LIST.INFO.SPAWN_COMMAND_STDOUT(data));
+            child.stdout.on("data", (data: Buffer) => {
+                const dataStr = data.toString();
+                output.push(dataStr);
+                this.emitter.emit(
+                    EVENT_LIST.INFO.SPAWN_COMMAND_STDOUT(dataStr)
+                );
             });
 
-            child.stderr.on("data", (data: string) => {
-                output.push(data);
-                this.emitter.emit(EVENT_LIST.ERROR.SPAWN_COMMAND_STDERR(data));
+            child.stderr.on("data", (data: Buffer) => {
+                const dataStr = data.toString();
+                output.push(dataStr);
+                this.emitter.emit(
+                    EVENT_LIST.ERROR.SPAWN_COMMAND_STDERR(dataStr)
+                );
             });
 
             child.on("exit", code => {

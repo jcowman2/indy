@@ -10,4 +10,5 @@ export interface Store {
 export interface StoreArgs {
     emitter: Emitter;
     processManager: ProcessManager;
+    workingDirectory: string;
 }
