@@ -20,20 +20,21 @@
     "url": "https://github.com/jcowman2/indy/issues"
   },
   "homepage": "https://github.com/jcowman2/indy",
-  "main": "dist/index.js",
   "scripts": {
     "test": "jest packages --coverage",
     "lint": "node node_modules/tslint/bin/tslint -c tslint.json --format stylish 'packages/*/src/**/*.ts'",
     "publish-coverage": "cat ./coverage/lcov.info | coveralls",
-    "init-build": "lerna bootstrap && lerna run build"
+    "init-build": "lerna bootstrap && lerna run build",
+    "build": "lerna run build",
+    "clean": "trash ./packages/*/dist"
   },
   "devDependencies": {
-    "lerna": "^3.13.1",
     "@types/jest": "^24.0.11",
     "commitizen": "^3.0.7",
     "coveralls": "^3.0.3",
     "cz-conventional-changelog": "^2.1.0",
     "jest": "^24.5.0",
+    "lerna": "^3.13.1",
     "prettier": "^1.16.4",
     "rollup": "^1.6.0",
     "rollup-plugin-cleanup": "^3.1.1",

@@ -2,7 +2,7 @@ import { join } from "path";
 import { DependentConfig } from "../config";
 import { SingleDependent, singleDependentProvider } from "../dependent";
 import { Emitter, EVENT_LIST } from "../events";
-import { ProcessManager } from "../process";
+import { ProcessManager, processManagerProvider } from "../process";
 import { Store, StoreArgs } from "./interfaces";
 
 export class StoreImpl implements Store {
@@ -22,15 +22,17 @@ export class StoreImpl implements Store {
         let packagePath = `<invalid: ${config.path}>`;
 
         try {
-            packagePath = join(
-                this._workingDirectory,
-                config.path,
-                "package.json"
-            );
+            const dependentCwd = join(this._workingDirectory, config.path);
+            const dependentProcessManager = processManagerProvider({
+                workingDirectory: dependentCwd,
+                emitter: this._emitter
+            });
+
+            packagePath = join(dependentCwd, "package.json");
             const pkg = await import(packagePath);
 
             const dependent = singleDependentProvider({
-                processManager: this._processManager,
+                processManager: dependentProcessManager,
                 rootDir: config.path,
                 emitter: this._emitter,
                 initCommands: config.initCommands,

@@ -108,10 +108,10 @@ export class SingleDependentImpl implements SingleDependent {
         const originalVersion = this.pkg.dependencies[dependency];
 
         try {
-            await this.processManager.spawnSequence(
-                [`npm uninstall ${dependency}`, `npm install ${replacement}`],
-                true
-            );
+            await this.processManager.spawnSequence([
+                `npm uninstall ${dependency}`,
+                `npm install ${replacement}`
+            ]);
 
             const newVersion = this.pkg.dependencies[dependency];
 

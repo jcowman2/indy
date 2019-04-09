@@ -55,7 +55,7 @@ export class ProcessManagerImpl implements ProcessManager {
         });
     }
 
-    public spawnSequence(commands: string[], bail?: boolean) {
+    public spawnSequence(commands: string[], bail: boolean = true) {
         if (commands.length === 0) {
             return Promise.resolve();
         }
