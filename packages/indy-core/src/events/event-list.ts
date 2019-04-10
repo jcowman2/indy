@@ -16,7 +16,7 @@ export const EVENT_LIST = {
         }),
         SEQUENCE_CMD_COMPLETE: (command: string, exitCode: number) => ({
             code: 110,
-            message: `Completed command (${command}) with exit code (${exitCode}).`,
+            message: `Completed command '${command}' with exit code ${exitCode}.`,
             type: debug
         }),
         SEQUENCE_CMD_FAIL: (
@@ -25,12 +25,12 @@ export const EVENT_LIST = {
             bail: boolean
         ) => ({
             code: 111,
-            message: `Command (${command}) failed with exit code (${exitCode}). Bail = ${bail}.`,
+            message: `Command '${command}' failed with exit code ${exitCode}. Bail = ${bail}.`,
             type: debug
         }),
         SPAWN_COMMAND: (command: string, args: string[], cwd: string) => ({
             code: 112,
-            message: `Spawning command (${command}) with args (${args}) where cwd = ${cwd}`,
+            message: `Spawning command '${command}' with args [${args}] where cwd = ${cwd}`,
             type: debug
         })
     },

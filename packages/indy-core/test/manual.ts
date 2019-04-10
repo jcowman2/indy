@@ -2,11 +2,26 @@
 
 import { Runner } from "..";
 
+const PRINT_RECORDS = false;
+
+const info = [];
+const debug = [];
+const error = [];
+
 const newRunner = () => {
     return new Runner()
-        .on("info", data => console.log(data.message))
-        .on("debug", data => console.log(data.message))
-        .on("error", data => console.log(data.message));
+        .on("info", data => {
+            process.stdout.write(data.message);
+            info.push(data);
+        })
+        .on("debug", data => {
+            process.stdout.write(data.message);
+            debug.push(data);
+        })
+        .on("error", data => {
+            process.stderr.write(data.message);
+            error.push(data);
+        });
 };
 
 (async () => {
@@ -37,4 +52,10 @@ const newRunner = () => {
         "@jcowman/indy-broken-lib",
         "@jcowman/indy-broken-lib"
     );
+
+    if (PRINT_RECORDS) {
+        console.log("INFO", info);
+        console.log("DEBUG", debug);
+        console.log("ERROR", error);
+    }
 })();

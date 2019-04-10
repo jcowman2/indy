@@ -1,4 +1,4 @@
-import Emittery = require("emittery");
+import Emittery from "emittery";
 
 export type RunnerEvent = "debug" | "info" | "warning" | "error";
 
