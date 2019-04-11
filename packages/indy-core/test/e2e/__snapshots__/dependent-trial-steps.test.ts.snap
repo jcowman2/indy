@@ -2,26 +2,41 @@
 
 exports[`e2e: Dependent trial steps 1`] = `
 "Initializing @jcowman/indy-test-client...
+Spawning command 'echo' with args [\\"my,first,init,command\\"] where cwd = [PATH REMOVED]\\"my first init command\\"
+Completed command 'echo \\"my first init command\\"' with exit code 0.
+Spawning command 'echo' with args [\\"my,second,init,command\\"] where cwd = [PATH REMOVED]\\"my second init command\\"
+Completed command 'echo \\"my second init command\\"' with exit code 0.
 Spawning command 'npm' with args [install] where cwd = [PATH REMOVED]npm WARN @jcowman/indy-test-client@1.0.0 No description
 npm WARN @jcowman/indy-test-client@1.0.0 No repository field.
 
-<Internal Process STDOUT>
-<Internal Process STDOUT>
 Completed command 'npm install' with exit code 0.
 @jcowman/indy-test-client initalized successfully.
 Building @jcowman/indy-test-client...
+Spawning command 'echo' with args [\\"my,build,command\\"] where cwd = [PATH REMOVED]\\"my build command\\"
+Completed command 'echo \\"my build command\\"' with exit code 0.
 @jcowman/indy-test-client built successfully.
 Running @jcowman/indy-test-client's verification tests...
-Spawning command 'npm' with args [test] where cwd = [PATH REMOVED]<Internal Process STDOUT>
-<Internal Process STDOUT>
-<Internal Process STDOUT>
-<Internal Process STDOUT>
-<Internal Process STDOUT>
-<Internal Process STDOUT>
-<Internal Process STDOUT>
-<Internal Process STDOUT>
-<Internal Process STDOUT>
-<Internal Process STDOUT>
+Spawning command 'npm' with args [test] where cwd = [PATH REMOVED]
+> @jcowman/indy-test-client@1.0.0 test [PATH REMOVED] mocha
+
+
+
+  1) getTen()
+
+  0 passing [TIME REMOVED]  1 failing
+
+  1) getTen():
+
+      AssertionError: expected 8 to equal 10
+      + expected - actual
+
+      -8
+      +10
+      
+      at Context.it (test.js:5:25)
+
+
+
 npm ERR! Test failed.  See above for more details.
 Command 'npm test' failed with exit code 1. Bail = true.
 An error occurred during 'npm test'. See output for more information.
@@ -30,23 +45,21 @@ Swapping @jcowman/indy-test-client's @jcowman/indy-broken-lib dependency...
 Spawning command 'npm' with args [uninstall,@jcowman/indy-broken-lib] where cwd = [PATH REMOVED]npm WARN @jcowman/indy-test-client@1.0.0 No description
 npm WARN @jcowman/indy-test-client@1.0.0 No repository field.
 
-<Internal Process STDOUT>
-<Internal Process STDOUT>
 Completed command 'npm uninstall @jcowman/indy-broken-lib' with exit code 0.
 Spawning command 'npm' with args [install,../indy-fixed-lib] where cwd = [PATH REMOVED]npm WARN @jcowman/indy-test-client@1.0.0 No description
 npm WARN @jcowman/indy-test-client@1.0.0 No repository field.
 
-<Internal Process STDOUT>
-<Internal Process STDOUT>
 Completed command 'npm install ../indy-fixed-lib' with exit code 0.
 @jcowman/indy-test-client's @jcowman/indy-broken-lib dependency swapped from ^1.0.0 to ^1.0.0 successfully.
 Running @jcowman/indy-test-client's verification tests...
-Spawning command 'npm' with args [test] where cwd = [PATH REMOVED]<Internal Process STDOUT>
-<Internal Process STDOUT>
-<Internal Process STDOUT>
-<Internal Process STDOUT>
-<Internal Process STDOUT>
-<Internal Process STDOUT>
+Spawning command 'npm' with args [test] where cwd = [PATH REMOVED]
+> @jcowman/indy-test-client@1.0.0 test [PATH REMOVED] mocha
+
+
+
+  ✓ getTen()
+
+  1 passing [TIME REMOVED]
 Completed command 'npm test' with exit code 0.
 "
 `;

@@ -4,13 +4,25 @@ import { Runner, RunnerEventData } from "../";
 export class TestableRunner {
     public runner: Runner;
     public out: string;
+    public doPrint: boolean;
+    public ignoreMessages: RegExp[];
+    public redactInfo: boolean;
+    public redactError: boolean;
+    public doRemoveIndeterminateValues: any;
 
-    constructor(
-        public doPrint = false,
-        public doRemoveIndeterminateValues = true,
-        public redactInfo = true,
-        public redactError = false
-    ) {
+    constructor({
+        doPrint = false,
+        ignoreMessages = [],
+        doRemoveIndeterminateValues = true,
+        redactInfo = false,
+        redactError = false
+    }) {
+        this.doPrint = doPrint;
+        this.ignoreMessages = ignoreMessages;
+        this.doRemoveIndeterminateValues = doRemoveIndeterminateValues;
+        this.redactInfo = redactInfo;
+        this.redactError = redactError;
+
         this.out = "";
         this.runner = new Runner()
             .on("info", data => this._handleData(data))
@@ -44,6 +56,12 @@ export class TestableRunner {
     }
 
     private _handleData(data: RunnerEventData, error: boolean = false) {
+        for (const pattern of this.ignoreMessages) {
+            if (data.message.match(pattern)) {
+                return;
+            }
+        }
+
         let message = "";
 
         const skipCode = error ? 410 : 210;

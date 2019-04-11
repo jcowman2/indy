@@ -1,14 +1,20 @@
 import { Dependent, IndyError } from "../..";
 import { TestableRunner } from "../test-utils";
 
-const testRunner = new TestableRunner();
+const testRunner = new TestableRunner({
+    ignoreMessages: [/(removed|added|audited).*package/, /found.*vulnerability/]
+});
 let testClient: Dependent;
 
 beforeAll(async done => {
     testClient = await testRunner.runner.load("indy-test-client", {
         path: "./demo/indy-test-client",
-        initCommands: ["npm install"],
-        buildCommands: [],
+        initCommands: [
+            'echo "my first init command"',
+            'echo "my second init command"',
+            "npm install"
+        ],
+        buildCommands: ['echo "my build command"'],
         testCommands: ["npm test"]
     });
     done();
