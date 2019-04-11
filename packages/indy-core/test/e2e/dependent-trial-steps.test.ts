@@ -1,17 +1,11 @@
-import { Dependent, IndyError, Runner } from "../..";
+import { Dependent, IndyError } from "../..";
+import { TestableRunner } from "../test-utils";
 
+const testRunner = new TestableRunner();
 let testClient: Dependent;
 
-const newRunner = () => {
-    return new Runner()
-        .on("info", data => console.log(data.message))
-        .on("debug", data => console.log(data.message))
-        .on("error", data => console.log(data.message));
-};
-
 beforeAll(async done => {
-    const indy = newRunner();
-    testClient = await indy.load("indy-test-client", {
+    testClient = await testRunner.runner.load("indy-test-client", {
         path: "./demo/indy-test-client",
         initCommands: ["npm install"],
         buildCommands: [],
@@ -32,16 +26,16 @@ test("e2e: Dependent trial steps", async done => {
     await testClient.init();
     await testClient.build();
 
-    expect.assertions(2);
+    expect.assertions(4);
 
     // Verify current build is failing.
     try {
         await testClient.test();
     } catch (e) {
         expect(e instanceof IndyError).toBeTruthy();
-        expect(e.message).toEqual(
-            "One or more verification tests failed. (Code: 403) Cause: An error occurred during 'npm test'. See output for more information. (Code: 411)"
-        );
+
+        expect(e.code).toEqual(403);
+        expect(e.cause.code).toEqual(411);
     }
 
     await testClient.swapDependency(
@@ -50,6 +44,8 @@ test("e2e: Dependent trial steps", async done => {
     );
 
     await testClient.test(); // Should run successfully now.
+
+    testRunner.testSnapshot();
 
     done();
 });

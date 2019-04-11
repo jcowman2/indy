@@ -1,0 +1,66 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`e2e: Dependent trial steps 1`] = `
+"Initializing @jcowman/indy-test-client...
+Spawning command 'npm' with args [install] where cwd = [PATH REMOVED]npm WARN @jcowman/indy-test-client@1.0.0 No description
+npm WARN @jcowman/indy-test-client@1.0.0 No repository field.
+
+audited 1146 packages in [TIME REMOVED]found 1 moderate severity vulnerability
+  run \`npm audit fix\` to fix them, or \`npm audit\` for details
+Completed command 'npm install' with exit code 0.
+@jcowman/indy-test-client initalized successfully.
+Building @jcowman/indy-test-client...
+@jcowman/indy-test-client built successfully.
+Running @jcowman/indy-test-client's verification tests...
+Spawning command 'npm' with args [test] where cwd = [PATH REMOVED]
+> @jcowman/indy-test-client@1.0.0 test [PATH REMOVED] mocha
+
+
+
+  1) getTen()
+
+  0 passing [TIME REMOVED]  1 failing
+
+  1) getTen():
+
+      AssertionError: expected 8 to equal 10
+      + expected - actual
+
+      -8
+      +10
+      
+      at Context.it (test.js:5:25)
+
+
+
+npm ERR! Test failed.  See above for more details.
+Command 'npm test' failed with exit code 1. Bail = true.
+An error occurred during 'npm test'. See output for more information.
+One or more verification tests failed.
+Swapping @jcowman/indy-test-client's @jcowman/indy-broken-lib dependency...
+Spawning command 'npm' with args [uninstall,@jcowman/indy-broken-lib] where cwd = [PATH REMOVED]npm WARN @jcowman/indy-test-client@1.0.0 No description
+npm WARN @jcowman/indy-test-client@1.0.0 No repository field.
+
+removed 1 package and audited 1145 packages in [TIME REMOVED]found 1 moderate severity vulnerability
+  run \`npm audit fix\` to fix them, or \`npm audit\` for details
+Completed command 'npm uninstall @jcowman/indy-broken-lib' with exit code 0.
+Spawning command 'npm' with args [install,../indy-fixed-lib] where cwd = [PATH REMOVED]npm WARN @jcowman/indy-test-client@1.0.0 No description
+npm WARN @jcowman/indy-test-client@1.0.0 No repository field.
+
++ @jcowman/indy-broken-lib@1.0.1
+added 1 package from 1 contributor and audited 1146 packages in [TIME REMOVED]found 1 moderate severity vulnerability
+  run \`npm audit fix\` to fix them, or \`npm audit\` for details
+Completed command 'npm install ../indy-fixed-lib' with exit code 0.
+@jcowman/indy-test-client's @jcowman/indy-broken-lib dependency swapped from ^1.0.0 to ^1.0.0 successfully.
+Running @jcowman/indy-test-client's verification tests...
+Spawning command 'npm' with args [test] where cwd = [PATH REMOVED]
+> @jcowman/indy-test-client@1.0.0 test [PATH REMOVED] mocha
+
+
+
+  ✓ getTen()
+
+  1 passing [TIME REMOVED]
+Completed command 'npm test' with exit code 0.
+"
+`;
