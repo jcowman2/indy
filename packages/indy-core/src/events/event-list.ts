@@ -16,7 +16,7 @@ export const EVENT_LIST = {
         }),
         SEQUENCE_CMD_COMPLETE: (command: string, exitCode: number) => ({
             code: 110,
-            message: `Completed command '${command}' with exit code ${exitCode}.`,
+            message: `Completed command '${command}' with exit code ${exitCode}.\n`,
             type: debug
         }),
         SEQUENCE_CMD_FAIL: (
@@ -25,12 +25,12 @@ export const EVENT_LIST = {
             bail: boolean
         ) => ({
             code: 111,
-            message: `Command '${command}' failed with exit code ${exitCode}. Bail = ${bail}.`,
+            message: `Command '${command}' failed with exit code ${exitCode}. Bail = ${bail}.\n`,
             type: debug
         }),
         SPAWN_COMMAND: (command: string, args: string[], cwd: string) => ({
             code: 112,
-            message: `Spawning command '${command}' with args [${args}] where cwd = ${cwd}`,
+            message: `Spawning command '${command}' with args [${args}] where cwd = ${cwd}\n`,
             type: debug
         })
     },
@@ -44,42 +44,42 @@ export const EVENT_LIST = {
         }),
         DEPENDENT_INIT_START: (name: string) => ({
             code: 201,
-            message: `Initializing ${name}...`,
+            message: `Initializing ${name}...\n`,
             type: info
         }),
         DEPENDENT_INIT_SUCCESSFUL: (name: string) => ({
             code: 202,
-            message: `${name} initalized successfully.`,
+            message: `${name} initalized successfully.\n`,
             type: info
         }),
         DEPENDENT_BUILD_START: (name: string) => ({
             code: 203,
-            message: `Building ${name}...`,
+            message: `Building ${name}...\n`,
             type: info
         }),
         DEPENDENT_BUILD_SUCCESSFUL: (name: string) => ({
             code: 204,
-            message: `${name} built successfully.`,
+            message: `${name} built successfully.\n`,
             type: info
         }),
         DEPENDENT_TEST_START: (name: string) => ({
             code: 205,
-            message: `Running ${name}'s verification tests...`,
+            message: `Running ${name}'s verification tests...\n`,
             type: info
         }),
         DEPENDENT_TEST_SUCCESSFUL: (name: string) => ({
             code: 206,
-            message: `All of ${name}'s verification tests passed!`,
+            message: `All of ${name}'s verification tests passed!\n`,
             type: info
         }),
         DEPENDENT_USING_OVERRIDES: {
             code: 207,
-            message: "Using command overrides.",
+            message: "Using command overrides.\n",
             type: info
         },
         DEPENDENT_SWAP_START: (pkgName: string, dependencyName: string) => ({
             code: 208,
-            message: `Swapping ${pkgName}'s ${dependencyName} dependency...`,
+            message: `Swapping ${pkgName}'s ${dependencyName} dependency...\n`,
             type: info
         }),
         DEPENDENT_SWAP_SUCCESSFUL: (
@@ -89,7 +89,7 @@ export const EVENT_LIST = {
             newVersion: string
         ) => ({
             code: 209,
-            message: `${pkgName}'s ${dependencyName} dependency swapped from ${originalVersion} to ${newVersion} successfully.`,
+            message: `${pkgName}'s ${dependencyName} dependency swapped from ${originalVersion} to ${newVersion} successfully.\n`,
             type: info
         }),
         SPAWN_COMMAND_STDOUT: (data: string) => ({
@@ -118,25 +118,25 @@ export const EVENT_LIST = {
         }),
         DEPENDENT_INIT_FAILED: (cause?: Error) => ({
             code: 401,
-            message: "Initialization failed.",
+            message: "Initialization failed.\n",
             type: error,
             cause
         }),
         DEPENDENT_BUILD_FAILED: (cause?: Error) => ({
             code: 402,
-            message: "Build failed.",
+            message: "Build failed.\n",
             type: error,
             cause
         }),
         DEPENDENT_TEST_FAILED: (cause?: Error) => ({
             code: 403,
-            message: "One or more verification tests failed.",
+            message: "One or more verification tests failed.\n",
             type: error,
             cause
         }),
         DEPENDENCY_NOT_FOUND: (pkgName: string, dependencyName: string) => ({
             code: 404,
-            message: `${pkgName} does not have the required dependency: ${dependencyName}`,
+            message: `${pkgName} does not have the required dependency: ${dependencyName}.\n`,
             type: error
         }),
         DEPENDENCY_SWAP_FAILED: (
@@ -146,12 +146,12 @@ export const EVENT_LIST = {
             desiredVersion: string
         ) => ({
             code: 405,
-            message: `${pkgName}'s ${dependencyName} dependency could not be swapped from ${originalVersion} to ${desiredVersion}.`,
+            message: `${pkgName}'s ${dependencyName} dependency could not be swapped from ${originalVersion} to ${desiredVersion}.\n`,
             type: error
         }),
         COULD_NOT_LOAD_PACKAGE: (packagePath: string, cause?: Error) => ({
             code: 406,
-            message: `Could not resolve a package.json file at '${packagePath}'.`,
+            message: `Could not resolve a package.json file at '${packagePath}'.\n`,
             type: error,
             cause
         }),
@@ -162,12 +162,12 @@ export const EVENT_LIST = {
         }),
         SPAWN_SEQUENCE_BAIL: (command: string) => ({
             code: 411,
-            message: `An error occurred during '${command}'. See output for more information.`,
+            message: `An error occurred during '${command}'. See output for more information.\n`,
             type: error
         }),
         EMIT_ILLEGAL_EVENT: (type: string) => ({
             code: 412,
-            message: `Cannot emit illegal event type: ${type}.`,
+            message: `Cannot emit illegal event type: ${type}.\n`,
             type: error
         })
     }

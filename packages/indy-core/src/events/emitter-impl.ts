@@ -25,10 +25,7 @@ export class EmitterImpl implements Emitter {
 
     public emitAndThrow(event: RunnerEventData): never {
         this.emit(event);
-        throw new IndyError(
-            `${event.message} (Code: ${event.code})`,
-            event.cause
-        );
+        throw new IndyError(event.message, event.code, event.cause);
     }
 
     public on(
