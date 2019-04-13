@@ -36,7 +36,7 @@ export interface MultipleDependents extends Dependent {
     readonly list: SingleDependent[];
 }
 
-export interface SingleDependentArgs extends DependentScriptStages {
+export interface SingleDependentArgs extends Partial<DependentScriptStages> {
     processManager: ProcessManager;
     rootDir: string;
     emitter: Emitter;
