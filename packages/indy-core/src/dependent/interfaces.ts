@@ -6,8 +6,8 @@ export interface Dependent {
     build(commands?: string[]): Promise<void>;
     test(commands?: string[]): Promise<void>;
 
-    passing(commands?: DependentScriptStages): Promise<void>;
-    failing(commands?: DependentScriptStages): Promise<void>;
+    passing(commands?: Partial<DependentScriptStages>): Promise<void>;
+    failing(commands?: Partial<DependentScriptStages>): Promise<void>;
 
     swapDependency(dependency?: string, replacement?: string): Promise<boolean>;
 
