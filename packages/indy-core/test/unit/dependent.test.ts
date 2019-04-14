@@ -66,43 +66,62 @@ describe("Dependent", () => {
 
             done();
         });
-    });
 
-    test("Emit init start and init success events if initialization is successful", async done => {
-        const { dependent, emitter } = mockDependent();
+        test("Emit init start and init success events if initialization is successful", async done => {
+            const { dependent, emitter } = mockDependent();
 
-        await dependent.init();
+            await dependent.init();
 
-        const emitterCalls = (emitter.emit as any).mock.calls;
+            const emitterCalls = (emitter.emit as any).mock.calls;
 
-        expect(emitterCalls[0][0].code).toBe(201);
-        expect(emitterCalls[1][0].code).toBe(202);
+            expect(emitterCalls[0][0].code).toBe(201);
+            expect(emitterCalls[1][0].code).toBe(202);
 
-        done();
-    });
-
-    test("Emit and throw a fail event if initialization fails", async done => {
-        const failingCommand = "command fails";
-
-        const { dependent, emitter } = mockDependent({
-            initCommands: [failingCommand],
-            processManager: {
-                spawnSequence: jest
-                    .fn()
-                    .mockImplementation((commands: string[]) => {
-                        if (commands.includes(failingCommand)) {
-                            throw new Error("err");
-                        }
-                    }),
-                spawnCommand: jest.fn()
-            }
+            done();
         });
 
-        await dependent.init();
+        test("Emit and throw a fail event if initialization fails", async done => {
+            const failingCommand = "command fails";
 
-        expect((emitter.emit as any).mock.calls[0][0].code).toBe(201);
-        expect((emitter.emitAndThrow as any).mock.calls[0][0].code).toBe(401);
+            const { dependent, emitter } = mockDependent({
+                initCommands: [failingCommand],
+                processManager: {
+                    spawnSequence: jest
+                        .fn()
+                        .mockImplementation((commands: string[]) => {
+                            if (commands.includes(failingCommand)) {
+                                throw new Error("err");
+                            }
+                        }),
+                    spawnCommand: jest.fn()
+                }
+            });
 
-        done();
+            await dependent.init();
+
+            expect((emitter.emit as any).mock.calls[0][0].code).toBe(201);
+            expect((emitter.emitAndThrow as any).mock.calls[0][0].code).toBe(
+                401
+            );
+
+            done();
+        });
+    });
+
+    describe("build", () => {
+        test("Dependent uses its configured buildCommands if no argument given", async done => {
+            const buildCommands = ["command 1", "command 2"];
+            const { dependent, processManager } = mockDependent({
+                buildCommands
+            });
+
+            await dependent.build();
+
+            expect(processManager.spawnSequence).toHaveBeenCalledWith(
+                buildCommands
+            );
+
+            done();
+        });
     });
 });
