@@ -36,6 +36,7 @@
     "coveralls": "^3.0.3",
     "cz-conventional-changelog": "^2.1.0",
     "jest": "^24.5.0",
+    "jest-snapshot-serializer-ansi": "^1.0.0",
     "lerna": "^3.13.1",
     "prettier": "^1.16.4",
     "rollup": "^1.6.0",

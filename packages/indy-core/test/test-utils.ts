@@ -35,7 +35,9 @@ export class TestableRunner {
     }
 
     public removeCarriageReturns(str: string) {
-        return str.replace(/\r\n|\r/g, "\n");
+        // return str.replace(/\r\n|\r/g, "\n");
+        // return str.replace(/\s\s+/g, " ");
+        return str;
     }
 
     public removeIndeterminateValues(str: string) {

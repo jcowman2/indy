@@ -7,5 +7,8 @@ module.exports = {
     ],
     setupFilesAfterEnv: [
         "<rootDir>/test/jest-setup.js"
+    ],
+    snapshotSerializers: [
+        "jest-snapshot-serializer-ansi"
     ]
 };
