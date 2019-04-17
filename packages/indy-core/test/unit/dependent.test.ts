@@ -2,14 +2,18 @@ import {
     SingleDependentArgs,
     singleDependentProvider
 } from "../../src/dependent";
-import { IndyError } from "../../src/events";
+import { IndyError, RunnerEventData } from "../../src/events";
 
 const mockDependent = (args: Partial<SingleDependentArgs> = {}) => {
     const defaultArgs = {
         pkg: jest.fn(),
         emitter: {
             emit: jest.fn(),
-            emitAndThrow: jest.fn()
+            emitAndThrow: jest
+                .fn()
+                .mockImplementation((err: RunnerEventData) => {
+                    throw new IndyError(err.message, err.code, err.cause);
+                })
         },
         processManager: {
             spawnSequence: jest.fn()
@@ -97,8 +101,15 @@ describe("Dependent", () => {
                 }
             });
 
-            await dependent.init();
+            let errorHappened = false;
 
+            try {
+                await dependent.init();
+            } catch (e) {
+                errorHappened = true;
+            }
+
+            expect(errorHappened).toBeTruthy();
             expect((emitter.emit as any).mock.calls[0][0].code).toBe(201);
             expect((emitter.emitAndThrow as any).mock.calls[0][0].code).toBe(
                 401
@@ -170,8 +181,15 @@ describe("Dependent", () => {
                 }
             });
 
-            await dependent.build();
+            let errorHappened = false;
 
+            try {
+                await dependent.build();
+            } catch (e) {
+                errorHappened = true;
+            }
+
+            expect(errorHappened).toBeTruthy();
             expect((emitter.emit as any).mock.calls[0][0].code).toBe(203);
             expect((emitter.emitAndThrow as any).mock.calls[0][0].code).toBe(
                 402
@@ -243,14 +261,143 @@ describe("Dependent", () => {
                 }
             });
 
-            await dependent.test();
+            let errorHappened = false;
 
+            try {
+                await dependent.test();
+            } catch (e) {
+                errorHappened = true;
+            }
+
+            expect(errorHappened).toBeTruthy();
             expect((emitter.emit as any).mock.calls[0][0].code).toBe(205);
             expect((emitter.emitAndThrow as any).mock.calls[0][0].code).toBe(
                 403
             );
 
             done();
+        });
+    });
+
+    describe("swapDependency", () => {
+        test("Emit and throw an error if the package doesn't exist or is missing the dependencies property", async done => {
+            const { dependent, emitter } = mockDependent();
+
+            let errorHappened = false;
+
+            try {
+                await dependent.swapDependency("@jcowman/foo", "../foo");
+            } catch (e) {
+                errorHappened = true;
+            }
+
+            expect(errorHappened).toBeTruthy();
+            expect((emitter.emit as any).mock.calls[0][0].code).toBe(208);
+            expect((emitter.emitAndThrow as any).mock.calls[0][0].code).toBe(
+                404
+            );
+
+            done();
+        });
+
+        test("Emit and throw an error if the package doesn't have the specific dependency", async done => {
+            const { dependent, emitter } = mockDependent({
+                pkg: {
+                    name: "testPkg",
+                    version: "v1.0.0",
+                    dependencies: {
+                        bar: "v1.0.0"
+                    }
+                }
+            });
+
+            let errorHappened = false;
+
+            try {
+                await dependent.swapDependency("@jcowman/foo", "../foo");
+            } catch (e) {
+                errorHappened = true;
+            }
+
+            expect(errorHappened).toBeTruthy();
+            expect((emitter.emit as any).mock.calls[0][0].code).toBe(208);
+            expect((emitter.emitAndThrow as any).mock.calls[0][0].code).toBe(
+                404
+            );
+
+            done();
+        });
+
+        test("Swap successful and emit success message", async done => {
+            const { dependent, emitter, processManager } = mockDependent({
+                pkg: {
+                    name: "testPkg",
+                    version: "v1.0.0",
+                    dependencies: {
+                        "@jcowman/foo": "v1.0.0"
+                    }
+                }
+            });
+
+            await dependent.swapDependency("@jcowman/foo", "../foo");
+
+            expect(processManager.spawnSequence).toHaveBeenCalledWith([
+                "npm uninstall @jcowman/foo",
+                "npm install ../foo"
+            ]);
+
+            const emitterCalls = (emitter.emit as any).mock.calls;
+
+            expect(emitterCalls[0][0].code).toBe(208);
+            expect(emitterCalls[1][0].code).toBe(209);
+
+            done();
+        });
+
+        test("Swap failure emits failure message", async done => {
+            const { dependent, emitter, processManager } = mockDependent({
+                pkg: {
+                    name: "testPkg",
+                    version: "v1.0.0",
+                    dependencies: {
+                        "@jcowman/foo": "v1.0.0"
+                    }
+                },
+                processManager: {
+                    spawnSequence: jest.fn().mockImplementationOnce(() => {
+                        throw new Error("err");
+                    }),
+                    spawnCommand: jest.fn()
+                }
+            });
+
+            let errorHappened = false;
+
+            try {
+                await dependent.swapDependency("@jcowman/foo", "../foo");
+            } catch (e) {
+                errorHappened = true;
+            }
+
+            expect(errorHappened).toBeTruthy();
+            expect(processManager.spawnSequence).toHaveBeenCalledWith([
+                "npm uninstall @jcowman/foo",
+                "npm install ../foo"
+            ]);
+            expect((emitter.emit as any).mock.calls[0][0].code).toBe(208);
+            expect((emitter.emitAndThrow as any).mock.calls[0][0].code).toBe(
+                405
+            );
+
+            done();
+        });
+
+        test.skip("Resolve false if the current version and new version are the same", async done => {
+            // TODO
+        });
+
+        test.skip("Resolve true if the current version and new version are not the same", async done => {
+            // TODO
         });
     });
 });
