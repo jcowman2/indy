@@ -2,7 +2,7 @@ import { Dependent, IndyError } from "../..";
 import { TestableRunner } from "../test-utils";
 
 const testRunner = new TestableRunner({
-    ignoreMessages: [/(removed|added|audited).*package/, /found.*vulnerability/]
+    ignoreMessages: [/(removed|added|audited).*package/, /found.*vulnerabil/]
 });
 let testClient: Dependent;
 
