@@ -3,23 +3,22 @@ import { ProcessManager } from "../process";
 import {
     DependentScriptStages,
     DependentTrialArgs,
-    Package,
+    PackageLive,
     SingleDependent,
     SingleDependentArgs
 } from "./interfaces";
 
 export class SingleDependentImpl implements SingleDependent {
-    public pkg: Package;
-
     public initCommands: string[];
     public buildCommands: string[];
     public testCommands: string[];
 
     private emitter: Emitter;
     private processManager: ProcessManager;
+    private pkgLive: PackageLive;
 
     constructor(args: SingleDependentArgs) {
-        this.pkg = args.pkg;
+        this.pkgLive = args.pkg;
 
         this.initCommands = args.initCommands || [];
         this.buildCommands = args.buildCommands || [];
@@ -27,6 +26,10 @@ export class SingleDependentImpl implements SingleDependent {
 
         this.emitter = args.emitter;
         this.processManager = args.processManager;
+    }
+
+    public get pkg() {
+        return this.pkgLive.toStatic();
     }
 
     public async init(commands?: string[]) {
@@ -113,6 +116,8 @@ export class SingleDependentImpl implements SingleDependent {
                 `npm install ${replacement}`
             ]);
 
+            await this._updatePkg();
+
             const newVersion = this.pkg.dependencies[dependency];
 
             this.emitter.emit(
@@ -164,5 +169,9 @@ export class SingleDependentImpl implements SingleDependent {
             return overrides;
         }
         return original;
+    }
+
+    private async _updatePkg() {
+        await this.pkgLive.refresh();
     }
 }

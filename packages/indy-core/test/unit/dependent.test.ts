@@ -6,7 +6,10 @@ import { IndyError, RunnerEventData } from "../../src/events";
 
 const mockDependent = (args: Partial<SingleDependentArgs> = {}) => {
     const defaultArgs = {
-        pkg: jest.fn(),
+        pkg: {
+            refresh: jest.fn(),
+            toStatic: jest.fn().mockImplementation(() => Promise.resolve({}))
+        },
         emitter: {
             emit: jest.fn(),
             emitAndThrow: jest
@@ -303,11 +306,16 @@ describe("Dependent", () => {
         test("Emit and throw an error if the package doesn't have the specific dependency", async done => {
             const { dependent, emitter } = mockDependent({
                 pkg: {
-                    name: "testPkg",
-                    version: "v1.0.0",
-                    dependencies: {
-                        bar: "v1.0.0"
-                    }
+                    refresh: jest.fn(),
+                    toStatic: jest.fn().mockImplementation(() =>
+                        Promise.resolve({
+                            name: "testPkg",
+                            version: "v1.0.0",
+                            dependencies: {
+                                bar: "v1.0.0"
+                            }
+                        })
+                    )
                 }
             });
 
@@ -331,11 +339,16 @@ describe("Dependent", () => {
         test("Swap successful and emit success message", async done => {
             const { dependent, emitter, processManager } = mockDependent({
                 pkg: {
-                    name: "testPkg",
-                    version: "v1.0.0",
-                    dependencies: {
-                        "@jcowman/foo": "v1.0.0"
-                    }
+                    refresh: jest.fn(),
+                    toStatic: jest.fn().mockImplementation(() =>
+                        Promise.resolve({
+                            name: "testPkg",
+                            version: "v1.0.0",
+                            dependencies: {
+                                "@jcowman/foo": "v1.0.0"
+                            }
+                        })
+                    )
                 }
             });
 
@@ -357,11 +370,16 @@ describe("Dependent", () => {
         test("Swap failure emits failure message", async done => {
             const { dependent, emitter, processManager } = mockDependent({
                 pkg: {
-                    name: "testPkg",
-                    version: "v1.0.0",
-                    dependencies: {
-                        "@jcowman/foo": "v1.0.0"
-                    }
+                    refresh: jest.fn(),
+                    toStatic: jest.fn().mockImplementation(() =>
+                        Promise.resolve({
+                            name: "testPkg",
+                            version: "v1.0.0",
+                            dependencies: {
+                                "@jcowman/foo": "v1.0.0"
+                            }
+                        })
+                    )
                 },
                 processManager: {
                     spawnSequence: jest.fn().mockImplementationOnce(() => {

@@ -40,12 +40,22 @@ export interface SingleDependentArgs extends Partial<DependentScriptStages> {
     processManager: ProcessManager;
     rootDir: string;
     emitter: Emitter;
-    pkg: Package;
+    pkg: PackageLive;
 }
 
+// TODO
 export interface Package {
-    // TODO
     name: string;
     version: string;
     dependencies: { [key: string]: string };
+}
+
+export interface PackageLive {
+    refresh(): Promise<void>;
+    toStatic(): Package;
+}
+
+export interface PackageLiveArgs {
+    path: string;
+    emitter: Emitter;
 }

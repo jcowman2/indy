@@ -149,9 +149,15 @@ export const EVENT_LIST = {
             message: `${pkgName}'s ${dependencyName} dependency could not be swapped from ${originalVersion} to ${desiredVersion}.\n`,
             type: error
         }),
-        COULD_NOT_LOAD_PACKAGE: (packagePath: string, cause?: Error) => ({
+        COULD_NOT_RESOLVE_PACKAGE: (packagePath: string, cause?: Error) => ({
             code: 406,
             message: `Could not resolve a package.json file at '${packagePath}'.\n`,
+            type: error,
+            cause
+        }),
+        COULD_NOT_LOAD_DEPENDENT: (path: string, cause?: Error) => ({
+            code: 407,
+            message: `An error occurred while loading a dependent at '${path}'.\n`,
             type: error,
             cause
         }),

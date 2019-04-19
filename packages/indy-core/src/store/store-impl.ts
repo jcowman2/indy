@@ -1,6 +1,10 @@
 import { join } from "path";
 import { DependentConfig } from "../config";
-import { SingleDependent, singleDependentProvider } from "../dependent";
+import {
+    packageLiveProvider,
+    SingleDependent,
+    singleDependentProvider
+} from "../dependent";
 import { Emitter, EVENT_LIST } from "../events";
 import { ProcessManager, processManagerProvider } from "../process";
 import { Store, StoreArgs } from "./interfaces";
@@ -19,17 +23,23 @@ export class StoreImpl implements Store {
     public async loadDependent(
         config: DependentConfig
     ): Promise<SingleDependent> {
-        let packagePath = `<invalid: ${config.path}>`;
+        let dependentCwd = `<invalid: ${config.path}>`;
 
         try {
-            const dependentCwd = join(this._workingDirectory, config.path);
+            dependentCwd = join(this._workingDirectory, config.path);
             const dependentProcessManager = processManagerProvider({
                 workingDirectory: dependentCwd,
                 emitter: this._emitter
             });
 
-            packagePath = join(dependentCwd, "package.json");
-            const pkg = await import(packagePath);
+            const packagePath = join(dependentCwd, "package.json");
+
+            const pkgLive = packageLiveProvider({
+                path: packagePath,
+                emitter: this._emitter
+            });
+
+            await pkgLive.refresh(); // Make sure package can be resolved
 
             const dependent = singleDependentProvider({
                 processManager: dependentProcessManager,
@@ -38,13 +48,13 @@ export class StoreImpl implements Store {
                 initCommands: config.initCommands,
                 buildCommands: config.buildCommands,
                 testCommands: config.testCommands,
-                pkg
+                pkg: pkgLive
             });
 
             return dependent;
         } catch (e) {
             return this._emitter.emitAndThrow(
-                EVENT_LIST.ERROR.COULD_NOT_LOAD_PACKAGE(packagePath, e)
+                EVENT_LIST.ERROR.COULD_NOT_LOAD_DEPENDENT(dependentCwd, e)
             );
         }
     }
