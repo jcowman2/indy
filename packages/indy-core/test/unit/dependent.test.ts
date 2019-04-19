@@ -8,7 +8,8 @@ const mockDependent = (args: Partial<SingleDependentArgs> = {}) => {
     const defaultArgs = {
         pkg: {
             refresh: jest.fn(),
-            toStatic: jest.fn().mockImplementation(() => Promise.resolve({}))
+            toStatic: jest.fn().mockImplementation(() => Promise.resolve({})),
+            _loadPkg: jest.fn()
         },
         emitter: {
             emit: jest.fn(),
@@ -315,8 +316,9 @@ describe("Dependent", () => {
                                 bar: "v1.0.0"
                             }
                         })
-                    )
-                }
+                    ),
+                    _loadPkg: jest.fn()
+                } as any
             });
 
             let errorHappened = false;
@@ -348,8 +350,9 @@ describe("Dependent", () => {
                                 "@jcowman/foo": "v1.0.0"
                             }
                         })
-                    )
-                }
+                    ),
+                    _loadPkg: jest.fn()
+                } as any
             });
 
             await dependent.swapDependency("@jcowman/foo", "../foo");
@@ -379,8 +382,9 @@ describe("Dependent", () => {
                                 "@jcowman/foo": "v1.0.0"
                             }
                         })
-                    )
-                },
+                    ),
+                    _loadPkg: jest.fn()
+                } as any,
                 processManager: {
                     spawnSequence: jest.fn().mockImplementationOnce(() => {
                         throw new Error("err");
