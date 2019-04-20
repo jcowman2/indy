@@ -91,7 +91,7 @@ export class SingleDependentImpl implements SingleDependent {
         return Promise.reject("Method not implemented.");
     }
 
-    public async swapDependency(dependency?: string, replacement?: string) {
+    public async swapDependency(dependency: string, replacement: string) {
         this.emitter.emit(
             EVENT_LIST.INFO.DEPENDENT_SWAP_START(this.pkg.name, dependency)
         );
