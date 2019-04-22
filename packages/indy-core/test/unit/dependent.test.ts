@@ -9,7 +9,7 @@ const mockDependent = (args: Partial<SingleDependentArgs> = {}) => {
         pkg: {
             refresh: jest.fn(),
             toStatic: jest.fn().mockImplementation(() => Promise.resolve({})),
-            _loadPkg: jest.fn()
+            _loadPackage: jest.fn()
         },
         emitter: {
             emit: jest.fn(),
@@ -317,7 +317,7 @@ describe("Dependent", () => {
                             }
                         })
                     ),
-                    _loadPkg: jest.fn()
+                    _loadPackage: jest.fn()
                 } as any
             });
 
@@ -342,16 +342,14 @@ describe("Dependent", () => {
             const { dependent, emitter, processManager } = mockDependent({
                 pkg: {
                     refresh: jest.fn(),
-                    toStatic: jest.fn().mockImplementation(() =>
-                        Promise.resolve({
-                            name: "testPkg",
-                            version: "v1.0.0",
-                            dependencies: {
-                                "@jcowman/foo": "v1.0.0"
-                            }
-                        })
-                    ),
-                    _loadPkg: jest.fn()
+                    toStatic: jest.fn().mockImplementation(() => ({
+                        name: "testPkg",
+                        version: "v1.0.0",
+                        dependencies: {
+                            "@jcowman/foo": "v1.0.0"
+                        }
+                    })),
+                    _loadPackage: jest.fn()
                 } as any
             });
 
@@ -374,16 +372,14 @@ describe("Dependent", () => {
             const { dependent, emitter, processManager } = mockDependent({
                 pkg: {
                     refresh: jest.fn(),
-                    toStatic: jest.fn().mockImplementation(() =>
-                        Promise.resolve({
-                            name: "testPkg",
-                            version: "v1.0.0",
-                            dependencies: {
-                                "@jcowman/foo": "v1.0.0"
-                            }
-                        })
-                    ),
-                    _loadPkg: jest.fn()
+                    toStatic: jest.fn().mockImplementation(() => ({
+                        name: "testPkg",
+                        version: "v1.0.0",
+                        dependencies: {
+                            "@jcowman/foo": "v1.0.0"
+                        }
+                    })),
+                    _loadPackage: jest.fn()
                 } as any,
                 processManager: {
                     spawnSequence: jest.fn().mockImplementationOnce(() => {
