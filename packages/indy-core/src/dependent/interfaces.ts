@@ -51,9 +51,17 @@ export interface Dependent {
     trialFix(args?: DependentTrialArgs): Promise<void>;
 }
 
+/**
+ * The series of scripts to be run at each dependent stage.
+ */
 export interface DependentScriptStages {
+    /** Run when the dependent loads for the first time. */
     initCommands: string[];
+
+    /** Run when the dependent's dependencies change. */
     buildCommands: string[];
+
+    /** Run to assess whether a dependent's status is passing or failing. */
     testCommands: string[];
 }
 
