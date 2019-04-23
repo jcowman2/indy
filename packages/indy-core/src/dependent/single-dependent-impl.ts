@@ -116,8 +116,7 @@ export class SingleDependentImpl implements SingleDependent {
                 `npm install ${replacement}`
             ]);
 
-            await this._updatePkg();
-
+            await this.pkgLive.refresh();
             const newVersion = this.pkg.dependencies[dependency];
 
             this.emitter.emit(
@@ -169,9 +168,5 @@ export class SingleDependentImpl implements SingleDependent {
             return overrides;
         }
         return original;
-    }
-
-    private async _updatePkg() {
-        await this.pkgLive.refresh();
     }
 }
