@@ -14,6 +14,11 @@ export const EVENT_LIST = {
             payload,
             type: debug
         }),
+        PACKAGE_REFRESHED: (path: string, didChange: boolean) => ({
+            code: 101,
+            message: `Refreshed live package at path '${path}'. Did change = ${didChange}.\n`,
+            type: debug
+        }),
         SEQUENCE_CMD_COMPLETE: (command: string, exitCode: number) => ({
             code: 110,
             message: `Completed command '${command}' with exit code ${exitCode}.\n`,

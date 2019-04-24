@@ -12,7 +12,14 @@ export class PackageLiveImpl implements PackageLive {
     }
 
     public async refresh() {
-        this._pkg = await this._loadPackage(this._path);
+        const newPkg = await this._loadPackage(this._path);
+
+        const areEqual = JSON.stringify(newPkg) === JSON.stringify(this._pkg);
+        this._emitter.emit(
+            EVENT_LIST.DEBUG.PACKAGE_REFRESHED(this._path, !areEqual)
+        );
+
+        this._pkg = newPkg;
     }
 
     public toStatic() {
