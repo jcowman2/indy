@@ -1,3 +1,4 @@
+import { join } from "path";
 import { Emitter, EVENT_LIST } from "../events";
 import { Package, PackageLive, PackageLiveArgs } from "./interfaces";
 
@@ -7,7 +8,7 @@ export class PackageLiveImpl implements PackageLive {
     private _pkg: Package;
 
     constructor(args: PackageLiveArgs) {
-        this._path = args.path;
+        this._path = join(process.cwd(), args.path);
         this._emitter = args.emitter;
     }
 

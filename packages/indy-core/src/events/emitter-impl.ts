@@ -1,4 +1,4 @@
-import Emittery from "emittery";
+import * as _Emittery from "emittery";
 import { EVENT_LIST } from "./event-list";
 import { IndyError } from "./indy-error";
 import {
@@ -7,6 +7,9 @@ import {
     RunnerEventData,
     TypedEmittery
 } from "./interfaces";
+
+// tslint:disable-next-line: variable-name
+const Emittery = _Emittery;
 
 // This is a hack, maybe there's a better way around it
 const isEventType = (o: string): o is RunnerEvent =>
