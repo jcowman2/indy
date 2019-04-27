@@ -1,5 +1,4 @@
 import { join } from "path";
-import { IndyError } from "../../dist/indy-core/src";
 import { PackageLive, packageLiveProvider } from "../../src/dependent";
 import { emitterProvider } from "../../src/events";
 import { processManagerProvider } from "../../src/process";
@@ -11,7 +10,7 @@ import { processManagerProvider } from "../../src/process";
     emitter.on("error", data => console.log(data));
 
     const pkgLive = packageLiveProvider({
-        path: "./resources/package.json",
+        path: join(process.cwd(), "./resources/package.json"),
         emitter
     });
 

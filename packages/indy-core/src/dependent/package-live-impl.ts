@@ -1,3 +1,4 @@
+import { readFile } from "fs";
 import { join } from "path";
 import { Emitter, EVENT_LIST } from "../events";
 import { Package, PackageLive, PackageLiveArgs } from "./interfaces";
@@ -8,7 +9,7 @@ export class PackageLiveImpl implements PackageLive {
     private _pkg: Package;
 
     constructor(args: PackageLiveArgs) {
-        this._path = join(process.cwd(), args.path);
+        this._path = args.path;
         this._emitter = args.emitter;
     }
 
@@ -33,7 +34,23 @@ export class PackageLiveImpl implements PackageLive {
 
     private async _loadPackage(path: string) {
         try {
-            return (await import(path)) as Package;
+            return await new Promise<Package>((resolve, reject) => {
+                readFile(path, (err, data) => {
+                    if (err) {
+                        reject(err);
+                    }
+
+                    let result;
+
+                    try {
+                        result = JSON.parse(data as any) as Package;
+                    } catch (e) {
+                        reject(e);
+                    }
+
+                    resolve(result);
+                });
+            });
         } catch (e) {
             return this._emitter.emitAndThrow(
                 EVENT_LIST.ERROR.COULD_NOT_RESOLVE_PACKAGE(path, e)

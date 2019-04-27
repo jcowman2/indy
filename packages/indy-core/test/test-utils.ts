@@ -35,24 +35,36 @@ export class TestableRunner {
     }
 
     public removeCarriageReturns(str: string) {
-        // return str.replace(/\r\n|\r/g, "\n");
+        return str.replace(/\r\n|\r/g, "\n");
         // return str.replace(/\s\s+/g, " ");
-        return str;
+        // return str;
     }
 
     public removeIndeterminateValues(str: string) {
         return str
             .split(" ")
             .map(word => {
-                // Remove paths
+                let singleQuotes = false;
+                if (word.match(/'.*'/)) {
+                    singleQuotes = true;
+                    word = word.substring(1, word.length - 1);
+                }
+
+                let result = word;
+
                 if (word.startsWith("/") && isAbsolute(word)) {
-                    return "[PATH REMOVED]";
+                    // Remove paths
+                    result = "[PATH REMOVED]";
+                } else if (word.match(/\(?[0-9]+m?s\)?/)) {
+                    // Remove times
+                    result = "[TIME REMOVED]";
                 }
-                // Remove times
-                if (word.match(/\(?[0-9]+m?s\)?/)) {
-                    return "[TIME REMOVED]";
+
+                if (singleQuotes) {
+                    result = `'${result}'`;
                 }
-                return word;
+
+                return result;
             })
             .join(" ");
     }
