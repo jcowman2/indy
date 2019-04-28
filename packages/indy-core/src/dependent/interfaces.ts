@@ -67,6 +67,8 @@ export interface DependentScriptStages {
 
 export interface DependentTrialArgs {
     expectInitialFailure: boolean;
+    dependency: string;
+    replacement: string;
 }
 
 export interface SingleDependent extends Dependent, DependentScriptStages {

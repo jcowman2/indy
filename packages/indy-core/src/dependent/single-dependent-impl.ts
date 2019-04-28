@@ -17,6 +17,9 @@ export class SingleDependentImpl implements SingleDependent {
     private processManager: ProcessManager;
     private pkgLive: PackageLive;
 
+    private isInitialized = false;
+    private isBuilt = false;
+
     constructor(args: SingleDependentArgs) {
         this.pkgLive = args.pkg;
 
@@ -35,10 +38,13 @@ export class SingleDependentImpl implements SingleDependent {
     public async init(commands?: string[]) {
         this.emitter.emit(EVENT_LIST.INFO.DEPENDENT_INIT_START(this.pkg.name));
 
+        this.isBuilt = false;
         const useCommands = this._chooseCommands(this.initCommands, commands);
 
         try {
             await this.processManager.spawnSequence(useCommands);
+            this.isInitialized = true;
+
             this.emitter.emit(
                 EVENT_LIST.INFO.DEPENDENT_INIT_SUCCESSFUL(this.pkg.name)
             );
@@ -52,10 +58,14 @@ export class SingleDependentImpl implements SingleDependent {
     public async build(commands?: string[]) {
         this.emitter.emit(EVENT_LIST.INFO.DEPENDENT_BUILD_START(this.pkg.name));
 
+        // TODO - throw warning if not initialized
+
         const useCommands = this._chooseCommands(this.buildCommands, commands);
 
         try {
             await this.processManager.spawnSequence(useCommands);
+            this.isBuilt = true;
+
             this.emitter.emit(
                 EVENT_LIST.INFO.DEPENDENT_BUILD_SUCCESSFUL(this.pkg.name)
             );
@@ -68,6 +78,8 @@ export class SingleDependentImpl implements SingleDependent {
 
     public async test(commands?: string[]) {
         this.emitter.emit(EVENT_LIST.INFO.DEPENDENT_TEST_START(this.pkg.name));
+
+        // TODO: throw warning if not initialized or built
 
         const useCommands = this._chooseCommands(this.testCommands, commands);
 
@@ -149,7 +161,23 @@ export class SingleDependentImpl implements SingleDependent {
     }
 
     public async trial(args?: DependentTrialArgs) {
-        return Promise.reject("Method not implemented.");
+        // TODO - add logs
+        if (!this.isInitialized) {
+            await this.init();
+        }
+
+        if (!this.isBuilt) {
+            await this.build();
+        }
+
+        await this.test();
+        // TODO - account for args.expectInitialFailure
+
+        await this.swapDependency(args.dependency, args.replacement);
+
+        await this.test();
+
+        await this.swapDependency(args.dependency, args.dependency);
     }
 
     public async trialFix(args?: DependentTrialArgs) {
