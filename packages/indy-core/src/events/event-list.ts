@@ -110,6 +110,16 @@ export const EVENT_LIST = {
             code: 300,
             message,
             type: warning
+        }),
+        DEPENDENT_NOT_INITIALIZED: (name: string, stage: string) => ({
+            code: 301,
+            message: `${name} has not been initialized. Running the ${stage} commands may have undesired behavior.\n`,
+            type: warning
+        }),
+        DEPENDENT_NOT_BUILT: (name: string, stage: string) => ({
+            code: 302,
+            message: `${name} has not been built. Running the ${stage} commands may have undesired behavior.\n`,
+            type: warning
         })
     },
 

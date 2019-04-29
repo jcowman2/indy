@@ -58,7 +58,14 @@ export class SingleDependentImpl implements SingleDependent {
     public async build(commands?: string[]) {
         this.emitter.emit(EVENT_LIST.INFO.DEPENDENT_BUILD_START(this.pkg.name));
 
-        // TODO - throw warning if not initialized
+        if (!this.isInitialized) {
+            this.emitter.emit(
+                EVENT_LIST.WARNING.DEPENDENT_NOT_INITIALIZED(
+                    this.pkg.name,
+                    "build"
+                )
+            );
+        }
 
         const useCommands = this._chooseCommands(this.buildCommands, commands);
 
@@ -79,7 +86,19 @@ export class SingleDependentImpl implements SingleDependent {
     public async test(commands?: string[]) {
         this.emitter.emit(EVENT_LIST.INFO.DEPENDENT_TEST_START(this.pkg.name));
 
-        // TODO: throw warning if not initialized or built
+        if (!this.isInitialized) {
+            this.emitter.emit(
+                EVENT_LIST.WARNING.DEPENDENT_NOT_INITIALIZED(
+                    this.pkg.name,
+                    "test"
+                )
+            );
+        }
+        if (!this.isBuilt) {
+            this.emitter.emit(
+                EVENT_LIST.WARNING.DEPENDENT_NOT_BUILT(this.pkg.name, "test")
+            );
+        }
 
         const useCommands = this._chooseCommands(this.testCommands, commands);
 
