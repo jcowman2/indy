@@ -176,6 +176,11 @@ export const EVENT_LIST = {
             type: error,
             cause
         }),
+        DEPENDENT_TRIAL_EXPECTED_FAILURE: (name: string) => ({
+            code: 408,
+            message: `Expected ${name}'s verification tests to fail during trial, but they passed.\n`,
+            type: error
+        }),
         SPAWN_COMMAND_STDERR: (data: string) => ({
             code: 410,
             message: data,

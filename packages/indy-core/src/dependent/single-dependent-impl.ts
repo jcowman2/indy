@@ -189,8 +189,27 @@ export class SingleDependentImpl implements SingleDependent {
             await this.build();
         }
 
-        await this.test();
-        // TODO - account for args.expectInitialFailure
+        let error;
+
+        try {
+            await this.test();
+        } catch (e) {
+            error = e;
+        }
+
+        if (error) {
+            if (!args.expectInitialFailure) {
+                throw error;
+            }
+        } else {
+            if (args.expectInitialFailure) {
+                this.emitter.emitAndThrow(
+                    EVENT_LIST.ERROR.DEPENDENT_TRIAL_EXPECTED_FAILURE(
+                        this.pkg.name
+                    )
+                );
+            }
+        }
 
         await this.swapDependency(args.dependency, args.replacement);
 
