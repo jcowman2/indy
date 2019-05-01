@@ -157,6 +157,7 @@ describe("Dependent", () => {
 
         test("Emit build start and build success events if build is successful", async done => {
             const { dependent, emitter } = mockDependent();
+            (dependent as any).isInitialized = true;
 
             await dependent.build();
 
@@ -237,6 +238,9 @@ describe("Dependent", () => {
 
         test("Emit test start and test success events if test is successful", async done => {
             const { dependent, emitter } = mockDependent();
+
+            (dependent as any).isInitialized = true;
+            (dependent as any).isBuilt = true;
 
             await dependent.test();
 
