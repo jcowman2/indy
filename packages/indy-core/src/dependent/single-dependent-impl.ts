@@ -179,8 +179,15 @@ export class SingleDependentImpl implements SingleDependent {
         return Promise.reject("Method not implemented.");
     }
 
-    public async trial(args?: DependentTrialArgs) {
-        // TODO - add logs
+    public async trial(args: DependentTrialArgs) {
+        this.emitter.emit(
+            EVENT_LIST.INFO.DEPENDENT_TRIAL_START(
+                this.pkg.name,
+                args.dependency,
+                args.replacement
+            )
+        );
+
         if (!this.isInitialized) {
             await this.init();
         }

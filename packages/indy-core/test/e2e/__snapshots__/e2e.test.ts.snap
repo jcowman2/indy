@@ -1,0 +1,146 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`e2e: Dependent -- trial Dependent -- trial 1`] = `
+"Refreshed live package at path '[PATH REMOVED]' Did change = true.
+Starting trial of @jcowman/indy-broken-lib@../indy-fixed-lib for @jcowman/indy-test-client...
+Initializing @jcowman/indy-test-client...
+Spawning command 'echo' with args [\\"my,first,init,command\\"] where cwd = [PATH REMOVED]\\"my first init command\\"
+Completed command 'echo \\"my first init command\\"' with exit code 0.
+Spawning command 'echo' with args [\\"my,second,init,command\\"] where cwd = [PATH REMOVED]\\"my second init command\\"
+Completed command 'echo \\"my second init command\\"' with exit code 0.
+Spawning command 'npm' with args [install] where cwd = [PATH REMOVED]npm WARN @jcowman/indy-test-client@1.0.0 No description
+npm WARN @jcowman/indy-test-client@1.0.0 No repository field.
+
+Completed command 'npm install' with exit code 0.
+@jcowman/indy-test-client initalized successfully.
+Building @jcowman/indy-test-client...
+Spawning command 'echo' with args [\\"my,build,command\\"] where cwd = [PATH REMOVED]\\"my build command\\"
+Completed command 'echo \\"my build command\\"' with exit code 0.
+@jcowman/indy-test-client built successfully.
+Running @jcowman/indy-test-client's verification tests...
+Spawning command 'npm' with args [test] where cwd = [PATH REMOVED]
+> @jcowman/indy-test-client@1.0.0 test [PATH REMOVED] mocha
+
+
+
+  1) getTen()
+
+  0 passing [TIME REMOVED]  1 failing
+
+  1) getTen():
+
+      AssertionError: expected 8 to equal 10
+      + expected - actual
+
+      -8
+      +10
+      
+      at Context.it (test.js:5:25)
+
+
+
+npm ERR! Test failed.  See above for more details.
+Command 'npm test' failed with exit code 1. Bail = true.
+An error occurred during 'npm test'. See output for more information.
+One or more verification tests failed.
+Swapping @jcowman/indy-test-client's @jcowman/indy-broken-lib dependency...
+Spawning command 'npm' with args [uninstall,@jcowman/indy-broken-lib] where cwd = [PATH REMOVED]npm WARN @jcowman/indy-test-client@1.0.0 No description
+npm WARN @jcowman/indy-test-client@1.0.0 No repository field.
+
+Completed command 'npm uninstall @jcowman/indy-broken-lib' with exit code 0.
+Spawning command 'npm' with args [install,../indy-fixed-lib] where cwd = [PATH REMOVED]npm WARN @jcowman/indy-test-client@1.0.0 No description
+npm WARN @jcowman/indy-test-client@1.0.0 No repository field.
+
+Completed command 'npm install ../indy-fixed-lib' with exit code 0.
+Refreshed live package at path '[PATH REMOVED]' Did change = true.
+@jcowman/indy-test-client's @jcowman/indy-broken-lib dependency swapped from ^1.0.0 to file:../indy-fixed-lib successfully.
+Running @jcowman/indy-test-client's verification tests...
+Spawning command 'npm' with args [test] where cwd = [PATH REMOVED]
+> @jcowman/indy-test-client@1.0.0 test [PATH REMOVED] mocha
+
+
+
+  ✓ getTen()
+
+  1 passing [TIME REMOVED]
+Completed command 'npm test' with exit code 0.
+All of @jcowman/indy-test-client's verification tests passed!
+Swapping @jcowman/indy-test-client's @jcowman/indy-broken-lib dependency...
+Spawning command 'npm' with args [uninstall,@jcowman/indy-broken-lib] where cwd = [PATH REMOVED]npm WARN @jcowman/indy-test-client@1.0.0 No description
+npm WARN @jcowman/indy-test-client@1.0.0 No repository field.
+
+Completed command 'npm uninstall @jcowman/indy-broken-lib' with exit code 0.
+Spawning command 'npm' with args [install,@jcowman/indy-broken-lib] where cwd = [PATH REMOVED]npm WARN @jcowman/indy-test-client@1.0.0 No description
+npm WARN @jcowman/indy-test-client@1.0.0 No repository field.
+
+Completed command 'npm install @jcowman/indy-broken-lib' with exit code 0.
+Refreshed live package at path '[PATH REMOVED]' Did change = true.
+@jcowman/indy-test-client's @jcowman/indy-broken-lib dependency swapped from file:../indy-fixed-lib to ^1.0.0 successfully.
+"
+`;
+
+exports[`e2e: Dependent -- trial steps Dependent -- trial steps 1`] = `
+"Refreshed live package at path '[PATH REMOVED]' Did change = true.
+Initializing @jcowman/indy-test-client...
+Spawning command 'echo' with args [\\"my,first,init,command\\"] where cwd = [PATH REMOVED]\\"my first init command\\"
+Completed command 'echo \\"my first init command\\"' with exit code 0.
+Spawning command 'echo' with args [\\"my,second,init,command\\"] where cwd = [PATH REMOVED]\\"my second init command\\"
+Completed command 'echo \\"my second init command\\"' with exit code 0.
+Spawning command 'npm' with args [install] where cwd = [PATH REMOVED]npm WARN @jcowman/indy-test-client@1.0.0 No description
+npm WARN @jcowman/indy-test-client@1.0.0 No repository field.
+
+Completed command 'npm install' with exit code 0.
+@jcowman/indy-test-client initalized successfully.
+Building @jcowman/indy-test-client...
+Spawning command 'echo' with args [\\"my,build,command\\"] where cwd = [PATH REMOVED]\\"my build command\\"
+Completed command 'echo \\"my build command\\"' with exit code 0.
+@jcowman/indy-test-client built successfully.
+Running @jcowman/indy-test-client's verification tests...
+Spawning command 'npm' with args [test] where cwd = [PATH REMOVED]
+> @jcowman/indy-test-client@1.0.0 test [PATH REMOVED] mocha
+
+
+
+  1) getTen()
+
+  0 passing [TIME REMOVED]  1 failing
+
+  1) getTen():
+
+      AssertionError: expected 8 to equal 10
+      + expected - actual
+
+      -8
+      +10
+      
+      at Context.it (test.js:5:25)
+
+
+
+npm ERR! Test failed.  See above for more details.
+Command 'npm test' failed with exit code 1. Bail = true.
+An error occurred during 'npm test'. See output for more information.
+One or more verification tests failed.
+Swapping @jcowman/indy-test-client's @jcowman/indy-broken-lib dependency...
+Spawning command 'npm' with args [uninstall,@jcowman/indy-broken-lib] where cwd = [PATH REMOVED]npm WARN @jcowman/indy-test-client@1.0.0 No description
+npm WARN @jcowman/indy-test-client@1.0.0 No repository field.
+
+Completed command 'npm uninstall @jcowman/indy-broken-lib' with exit code 0.
+Spawning command 'npm' with args [install,../indy-fixed-lib] where cwd = [PATH REMOVED]npm WARN @jcowman/indy-test-client@1.0.0 No description
+npm WARN @jcowman/indy-test-client@1.0.0 No repository field.
+
+Completed command 'npm install ../indy-fixed-lib' with exit code 0.
+Refreshed live package at path '[PATH REMOVED]' Did change = true.
+@jcowman/indy-test-client's @jcowman/indy-broken-lib dependency swapped from ^1.0.0 to file:../indy-fixed-lib successfully.
+Running @jcowman/indy-test-client's verification tests...
+Spawning command 'npm' with args [test] where cwd = [PATH REMOVED]
+> @jcowman/indy-test-client@1.0.0 test [PATH REMOVED] mocha
+
+
+
+  ✓ getTen()
+
+  1 passing [TIME REMOVED]
+Completed command 'npm test' with exit code 0.
+"
+`;

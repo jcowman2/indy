@@ -101,6 +101,15 @@ export const EVENT_LIST = {
             code: 210,
             message: data,
             type: info
+        }),
+        DEPENDENT_TRIAL_START: (
+            pkgName: string,
+            dependencyName: string,
+            replacementPath: string
+        ) => ({
+            code: 211,
+            message: `Starting trial of ${dependencyName}@${replacementPath} for ${pkgName}...\n`,
+            type: info
         })
     },
 
