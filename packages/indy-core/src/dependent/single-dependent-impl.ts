@@ -226,7 +226,7 @@ export class SingleDependentImpl implements SingleDependent {
     }
 
     public async trialFix(args?: DependentTrialArgs) {
-        return Promise.reject("Method not implemented.");
+        return await this.trial({ ...args, expectInitialFailure: true });
     }
 
     /**
