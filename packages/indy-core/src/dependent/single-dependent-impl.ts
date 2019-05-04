@@ -115,11 +115,23 @@ export class SingleDependentImpl implements SingleDependent {
     }
 
     public async passing(commands?: DependentScriptStages) {
-        return Promise.reject("Method not implemented.");
-    }
+        if (!this.isInitialized) {
+            const initCommands = commands ? commands.initCommands : [];
+            await this.init(initCommands);
+        }
 
-    public async failing(commands?: DependentScriptStages) {
-        return Promise.reject("Method not implemented.");
+        if (!this.isBuilt) {
+            const buildCommands = commands ? commands.buildCommands : [];
+            await this.build(buildCommands);
+        }
+
+        try {
+            const testCommands = commands ? commands.testCommands : [];
+            await this.test(testCommands);
+            return true;
+        } catch (err) {
+            return false;
+        }
     }
 
     public async swapDependency(dependency: string, replacement: string) {
@@ -236,7 +248,7 @@ export class SingleDependentImpl implements SingleDependent {
      * @param overrides Any overrides to be used instead of the defaults.
      */
     private _chooseCommands(original: string[], overrides: string[]) {
-        if (overrides) {
+        if (overrides && overrides.length > 0) {
             this.emitter.emit(EVENT_LIST.INFO.DEPENDENT_USING_OVERRIDES);
             return overrides;
         }

@@ -1,6 +1,8 @@
 import { Emitter } from "../events";
 import { ProcessManager } from "../process";
 
+// PUBLIC INTERFACES //
+
 /**
  * A package which is dependent on the package being tested.
  */
@@ -13,6 +15,7 @@ export interface Dependent {
      * @param commands Optional overrides for the dependent's preconfigured initialization commands.
      */
     init(commands?: string[]): Promise<void>;
+
     /**
      * Run the dependent's build commands.
      *
@@ -21,14 +24,18 @@ export interface Dependent {
      * @param commands Optional overrides for the dependent's preconfigured build commands.
      */
     build(commands?: string[]): Promise<void>;
+
     /**
      * Run the dependent's test commands. Fails if a command causes an error.
      * @param commands Optional overrides for the dependent's preconfigured test commands.
      */
     test(commands?: string[]): Promise<void>;
 
-    passing(commands?: Partial<DependentScriptStages>): Promise<void>;
-    failing(commands?: Partial<DependentScriptStages>): Promise<void>;
+    /**
+     * Resolves to whether the dependent's tests are passing with its current dependencies.
+     * @param commands Optional overrides for any of the dependent's preconfigured commands.
+     */
+    passing(commands?: Partial<DependentScriptStages>): Promise<boolean>;
 
     /**
      * Swap one of the dependent's dependencies with another source.
@@ -44,10 +51,31 @@ export interface Dependent {
      */
     swapDependency(dependency: string, replacement: string): Promise<boolean>;
 
-    reset(): Promise<void>;
-    update(): Promise<boolean>;
+    reset(): Promise<void>; // TODO
+    update(): Promise<boolean>; // TODO
 
+    /**
+     * Runs a trial for the given dependency, ensuring the package's tests
+     * still pass when the dependency is updated to the given replacement.
+     *
+     * Will throw an error if the dependent's tests are failing to begin with,
+     * unless the `expectInitialFailure` argument is `true`.
+     *
+     * @param args The trial's configuration. See `DependentTrialArgs`.
+     */
     trial(args?: DependentTrialArgs): Promise<void>;
+
+    /**
+     * Runs a trial for the given dependency, expecting the package's tests
+     * to be failing in its current state and then fixed when the dependency
+     * is updated to the given replacement.
+     *
+     * Equivalent to calling `Dependent.trial()` with the `expectInitialFailure`
+     * argument set to `true`. Will throw an error if the dependent's tests are
+     * passing to begin with.
+     *
+     * @param args The trial's configuration. See `DependentTrialArgs`.
+     */
     trialFix(args?: DependentTrialArgs): Promise<void>;
 }
 
@@ -65,32 +93,53 @@ export interface DependentScriptStages {
     testCommands: string[];
 }
 
+/**
+ * Arguments for running a trial for a staged package via `Dependent.trial()`.
+ */
 export interface DependentTrialArgs {
+    /**
+     * Whether the dependent's tests should be failing in its current state.
+     * If left unspecified, the tests must pass or an error will be thrown.
+     */
     expectInitialFailure?: boolean;
+
+    /** The name of the dependency to swap. */
     dependency: string;
+
+    /** The path of the staged dependency version to be swapped to. */
     replacement: string;
 }
 
+/**
+ * A single dependent.
+ */
 export interface SingleDependent extends Dependent, DependentScriptStages {
+    /** The dependent's `package.json` file. */
     readonly pkg: Package;
 }
 
+/**
+ * A collection of dependents. Allows batch method calls on multiple dependents.
+ */
 export interface MultipleDependents extends Dependent {
+    /** The list of individual dependents represented by this object. */
     readonly list: SingleDependent[];
 }
+
+/** A Node package's `package.json` file. */
+export interface Package {
+    name: string;
+    version: string;
+    dependencies: { [key: string]: string };
+}
+
+// INTERNAL INTERFACES //
 
 export interface SingleDependentArgs extends Partial<DependentScriptStages> {
     processManager: ProcessManager;
     rootDir: string;
     emitter: Emitter;
     pkg: PackageLive;
-}
-
-// TODO
-export interface Package {
-    name: string;
-    version: string;
-    dependencies: { [key: string]: string };
 }
 
 export interface PackageLive {
