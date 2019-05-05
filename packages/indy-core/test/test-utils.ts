@@ -69,6 +69,10 @@ export class TestableRunner {
             .join(" ");
     }
 
+    public reset() {
+        this.out = "";
+    }
+
     private _handleData(data: RunnerEventData, error: boolean = false) {
         for (const pattern of this.ignoreMessages) {
             if (data.message.match(pattern)) {

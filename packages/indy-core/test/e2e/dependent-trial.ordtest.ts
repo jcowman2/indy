@@ -7,7 +7,7 @@ const testRunner = new TestableRunner({
 let testClient: Dependent;
 
 describe("e2e: Dependent -- trial", () => {
-    beforeAll(async done => {
+    beforeEach(async done => {
         testClient = await testRunner.runner.load("indy-test-client", {
             path: "./demo/indy-test-client",
             initCommands: [
@@ -21,11 +21,12 @@ describe("e2e: Dependent -- trial", () => {
         done();
     });
 
-    afterAll(async done => {
+    afterEach(async done => {
         await testClient.swapDependency(
             "@jcowman/indy-broken-lib",
             "@jcowman/indy-broken-lib"
         );
+        testRunner.reset();
         done();
     });
 
@@ -38,6 +39,21 @@ describe("e2e: Dependent -- trial", () => {
 
         testRunner.testSnapshot();
 
+        done();
+    });
+
+    test("Dependent -- trialFix", async done => {
+        await testClient.trialFix({
+            dependency: "@jcowman/indy-broken-lib",
+            replacement: "../indy-fixed-lib"
+        });
+        done();
+    });
+
+    test("Dependent -- passing", async done => {
+        const result = await testClient.passing();
+        expect(result).toBeFalsy();
+        testRunner.testSnapshot();
         done();
     });
 });
