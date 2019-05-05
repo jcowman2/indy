@@ -108,7 +108,8 @@ Spawning command 'npm' with args [test] where cwd = [PATH REMOVED]
 
   ✓ getTen()
 
-  1 passing [TIME REMOVED]Completed command 'npm test' with exit code 0.
+  1 passing [TIME REMOVED]
+Completed command 'npm test' with exit code 0.
 All of @jcowman/indy-test-client's verification tests passed!
 Swapping @jcowman/indy-test-client's @jcowman/indy-broken-lib dependency...
 Spawning command 'npm' with args [uninstall,@jcowman/indy-broken-lib] where cwd = [PATH REMOVED]npm WARN @jcowman/indy-test-client@1.0.0 No description
