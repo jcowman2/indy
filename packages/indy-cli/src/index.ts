@@ -6,6 +6,7 @@
  */
 
 import * as program from "commander";
+import { Runner } from "indy-core";
 import * as corePkg from "indy-core/package.json";
 import * as pkg from "./../package.json";
 import trialCommand from "./trial";
@@ -14,7 +15,13 @@ const description = `${pkg.description}\nUsing indy-core v${corePkg.version}.`;
 
 program.version(pkg.version, "-v, --version").description(description);
 
-trialCommand(program);
+// TODO
+const indy = new Runner()
+    .on("error", data => console.log(data))
+    .on("warning", data => console.log(data))
+    .on("info", data => console.log(data));
+
+trialCommand(program, indy);
 
 program.parse(process.argv);
 

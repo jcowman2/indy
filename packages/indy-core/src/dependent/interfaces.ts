@@ -63,7 +63,7 @@ export interface Dependent {
      *
      * @param args The trial's configuration. See `DependentTrialArgs`.
      */
-    trial(args?: DependentTrialArgs): Promise<void>;
+    trial(args: DependentTrialArgs): Promise<void>;
 
     /**
      * Runs a trial for the given dependency, expecting the package's tests
