@@ -1,3 +1,10 @@
+/*
+ * Public and private interfaces for the `dependent` component.
+ *
+ * Copyright (c) Joseph R Cowman
+ * Licensed under MIT License (see https://github.com/jcowman2/indy)
+ */
+
 import { Emitter } from "../events";
 import { ProcessManager } from "../process";
 

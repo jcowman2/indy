@@ -1,3 +1,10 @@
+/*
+ * Contains the default internal implementation for `SingleDependent`.
+ *
+ * Copyright (c) Joseph R Cowman
+ * Licensed under MIT License (see https://github.com/jcowman2/indy)
+ */
+
 import { Emitter, EVENT_LIST } from "../events";
 import { ProcessManager } from "../process";
 import {
@@ -135,6 +142,7 @@ export class SingleDependentImpl implements SingleDependent {
     }
 
     public async swapDependency(dependency: string, replacement: string) {
+        // TODO - get the name of the replacement by importing at its path. This is an error check in itself.
         this.emitter.emit(
             EVENT_LIST.INFO.DEPENDENT_SWAP_START(this.pkg.name, dependency)
         );

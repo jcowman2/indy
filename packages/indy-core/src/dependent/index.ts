@@ -1,3 +1,11 @@
+/*
+ * Index for the `dependent` component, which provides a public API
+ * for interacting with--and testing--the packages which depend on the staged package.
+ *
+ * Copyright (c) Joseph R Cowman
+ * Licensed under MIT License (see https://github.com/jcowman2/indy)
+ */
+
 import { Provider } from "../interfaces";
 import {
     PackageLive,

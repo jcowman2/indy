@@ -1,5 +1,11 @@
+/*
+ * Contains the default internal implementation for `PackageLive`.
+ *
+ * Copyright (c) Joseph R Cowman
+ * Licensed under MIT License (see https://github.com/jcowman2/indy)
+ */
+
 import { readFile } from "fs";
-import { join } from "path";
 import { Emitter, EVENT_LIST } from "../events";
 import { Package, PackageLive, PackageLiveArgs } from "./interfaces";
 

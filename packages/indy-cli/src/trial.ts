@@ -21,6 +21,7 @@ export default (program: Command, indy: Runner) =>
             const testCommands = [];
 
             const dep = await indy.load(dependent, {
+                path: dependent,
                 initCommands,
                 buildCommands,
                 testCommands
