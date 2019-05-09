@@ -16,8 +16,8 @@ export {
     MultipleDependents,
     DependentScriptStages,
     Dependent,
-    Package,
     SingleDependent,
     DependentTrialArgs
 } from "./dependent";
 export { RunnerEvent, RunnerEventData, IndyError, EVENT_LIST } from "./events";
+export { Package } from "./package";

@@ -6,14 +6,16 @@
  */
 
 import { Emitter, EVENT_LIST } from "../events";
+import { PackageLive, packageLiveProvider } from "../package";
 import { ProcessManager } from "../process";
 import {
     DependentScriptStages,
     DependentTrialArgs,
-    PackageLive,
     SingleDependent,
     SingleDependentArgs
 } from "./interfaces";
+import { join } from "path";
+import { promises } from "fs";
 
 export class SingleDependentImpl implements SingleDependent {
     public initCommands: string[];
@@ -23,19 +25,20 @@ export class SingleDependentImpl implements SingleDependent {
     private emitter: Emitter;
     private processManager: ProcessManager;
     private pkgLive: PackageLive;
+    private rootDir: string;
 
     private isInitialized = false;
     private isBuilt = false;
 
     constructor(args: SingleDependentArgs) {
-        this.pkgLive = args.pkg;
-
         this.initCommands = args.initCommands || [];
         this.buildCommands = args.buildCommands || [];
         this.testCommands = args.testCommands || [];
 
         this.emitter = args.emitter;
         this.processManager = args.processManager;
+        this.pkgLive = args.pkg;
+        this.rootDir = args.rootDir;
     }
 
     public get pkg() {
@@ -141,8 +144,19 @@ export class SingleDependentImpl implements SingleDependent {
         }
     }
 
-    public async swapDependency(dependency: string, replacement: string) {
-        // TODO - get the name of the replacement by importing at its path. This is an error check in itself.
+    public async swapDependency(replacement: string) {
+        let isDir = false;
+
+        try {
+            isDir = (await promises.stat(replacement)).isDirectory();
+        } catch (e) {
+            // If stat throws an error, isDir is false.
+        }
+
+        const dependency = isDir
+            ? (await this._loadPackage(replacement)).name
+            : replacement;
+
         this.emitter.emit(
             EVENT_LIST.INFO.DEPENDENT_SWAP_START(this.pkg.name, dependency)
         );
@@ -200,11 +214,14 @@ export class SingleDependentImpl implements SingleDependent {
     }
 
     public async trial(args: DependentTrialArgs) {
+        const replacementPath = args.replacement;
+        const replacementName = (await this._loadPackage(replacementPath)).name;
+
         this.emitter.emit(
             EVENT_LIST.INFO.DEPENDENT_TRIAL_START(
                 this.pkg.name,
-                args.dependency,
-                args.replacement
+                replacementName,
+                replacementPath
             )
         );
 
@@ -238,11 +255,11 @@ export class SingleDependentImpl implements SingleDependent {
             }
         }
 
-        await this.swapDependency(args.dependency, args.replacement);
+        await this.swapDependency(replacementPath);
 
         await this.test();
 
-        await this.swapDependency(args.dependency, args.dependency);
+        await this.swapDependency(replacementName);
     }
 
     public async trialFix(args?: DependentTrialArgs) {
@@ -261,5 +278,17 @@ export class SingleDependentImpl implements SingleDependent {
             return overrides;
         }
         return original;
+    }
+
+    private async _loadPackage(path: string) {
+        const pkgPath = join(process.cwd(), path, "package.json");
+
+        const pkg = packageLiveProvider({
+            emitter: this.emitter,
+            path: pkgPath
+        });
+
+        await pkg.refresh();
+        return pkg.toStatic();
     }
 }

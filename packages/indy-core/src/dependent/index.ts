@@ -7,13 +7,7 @@
  */
 
 import { Provider } from "../interfaces";
-import {
-    PackageLive,
-    PackageLiveArgs,
-    SingleDependent,
-    SingleDependentArgs
-} from "./interfaces";
-import { PackageLiveImpl } from "./package-live-impl";
+import { SingleDependent, SingleDependentArgs } from "./interfaces";
 import { SingleDependentImpl } from "./single-dependent-impl";
 
 export const singleDependentProvider: Provider<
@@ -21,16 +15,10 @@ export const singleDependentProvider: Provider<
     SingleDependent
 > = args => new SingleDependentImpl(args);
 
-export const packageLiveProvider: Provider<
-    PackageLiveArgs,
-    PackageLive
-> = args => new PackageLiveImpl(args);
-
-export { SingleDependent, SingleDependentArgs, PackageLive, PackageLiveArgs };
+export { SingleDependent, SingleDependentArgs };
 export {
     Dependent,
     DependentScriptStages,
     DependentTrialArgs,
-    MultipleDependents,
-    Package
+    MultipleDependents
 } from "./interfaces";

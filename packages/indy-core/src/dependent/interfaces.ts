@@ -6,6 +6,7 @@
  */
 
 import { Emitter } from "../events";
+import { Package, PackageLive } from "../package";
 import { ProcessManager } from "../process";
 
 // PUBLIC INTERFACES //
@@ -50,13 +51,12 @@ export interface Dependent {
      * This step runs within trials, so there is rarely a need to call
      * this method directly unless you are doing something specific.
      *
-     * @param dependency The name of the dependency.
      * @param replacement The new source to be installed. (i.e. a relative path
      * to a local version of the dependency.)
      * @returns A promise which resolves to true if the new dependency has a
      * different version than the old one, false otherwise.
      */
-    swapDependency(dependency: string, replacement: string): Promise<boolean>;
+    swapDependency(replacement: string): Promise<boolean>;
 
     reset(): Promise<void>; // TODO
     update(): Promise<boolean>; // TODO
@@ -110,9 +110,6 @@ export interface DependentTrialArgs {
      */
     expectInitialFailure?: boolean;
 
-    /** The name of the dependency to swap. */
-    dependency: string;
-
     /** The path of the staged dependency version to be swapped to. */
     replacement: string;
 }
@@ -133,13 +130,6 @@ export interface MultipleDependents extends Dependent {
     readonly list: SingleDependent[];
 }
 
-/** A Node package's `package.json` file. */
-export interface Package {
-    name: string;
-    version: string;
-    dependencies: { [key: string]: string };
-}
-
 // INTERNAL INTERFACES //
 
 export interface SingleDependentArgs extends Partial<DependentScriptStages> {
@@ -147,14 +137,4 @@ export interface SingleDependentArgs extends Partial<DependentScriptStages> {
     rootDir: string;
     emitter: Emitter;
     pkg: PackageLive;
-}
-
-export interface PackageLive {
-    refresh(): Promise<void>;
-    toStatic(): Package;
-}
-
-export interface PackageLiveArgs {
-    path: string;
-    emitter: Emitter;
 }

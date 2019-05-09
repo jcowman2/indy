@@ -1,11 +1,8 @@
 import { join } from "path";
 import { DependentConfig } from "../config";
-import {
-    packageLiveProvider,
-    SingleDependent,
-    singleDependentProvider
-} from "../dependent";
+import { SingleDependent, singleDependentProvider } from "../dependent";
 import { Emitter, EVENT_LIST } from "../events";
+import { packageLiveProvider } from "../package";
 import { ProcessManager, processManagerProvider } from "../process";
 import { Store, StoreArgs } from "./interfaces";
 

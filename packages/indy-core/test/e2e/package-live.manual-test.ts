@@ -1,6 +1,6 @@
 import { join } from "path";
-import { PackageLive, packageLiveProvider } from "../../src/dependent";
 import { emitterProvider } from "../../src/events";
+import { packageLiveProvider } from "../../src/package";
 import { processManagerProvider } from "../../src/process";
 
 (async () => {
