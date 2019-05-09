@@ -5,6 +5,7 @@
  * Licensed under MIT License (see https://github.com/jcowman2/indy)
  */
 
+import { join } from "path";
 import { Emitter, EVENT_LIST } from "../events";
 import { PackageLive, packageLiveProvider } from "../package";
 import { ProcessManager } from "../process";
@@ -14,13 +15,13 @@ import {
     SingleDependent,
     SingleDependentArgs
 } from "./interfaces";
-import { join } from "path";
-import { promises } from "fs";
 
 export class SingleDependentImpl implements SingleDependent {
     public initCommands: string[];
     public buildCommands: string[];
     public testCommands: string[];
+
+    public pkgLiveProvider = packageLiveProvider; // Allow modification for testing
 
     private emitter: Emitter;
     private processManager: ProcessManager;
@@ -144,16 +145,8 @@ export class SingleDependentImpl implements SingleDependent {
         }
     }
 
-    public async swapDependency(replacement: string) {
-        let isDir = false;
-
-        try {
-            isDir = (await promises.stat(replacement)).isDirectory();
-        } catch (e) {
-            // If stat throws an error, isDir is false.
-        }
-
-        const dependency = isDir
+    public async swapDependency(replacement: string, isLocalDir: boolean) {
+        const dependency = isLocalDir
             ? (await this._loadPackage(replacement)).name
             : replacement;
 
@@ -255,11 +248,11 @@ export class SingleDependentImpl implements SingleDependent {
             }
         }
 
-        await this.swapDependency(replacementPath);
+        await this.swapDependency(replacementPath, true);
 
         await this.test();
 
-        await this.swapDependency(replacementName);
+        await this.swapDependency(replacementName, false);
     }
 
     public async trialFix(args?: DependentTrialArgs) {
@@ -283,7 +276,7 @@ export class SingleDependentImpl implements SingleDependent {
     private async _loadPackage(path: string) {
         const pkgPath = join(process.cwd(), path, "package.json");
 
-        const pkg = packageLiveProvider({
+        const pkg = this.pkgLiveProvider({
             emitter: this.emitter,
             path: pkgPath
         });

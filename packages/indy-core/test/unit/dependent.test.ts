@@ -1,8 +1,12 @@
+import { PackageLive } from "../../dist/indy-core/src/package";
 import {
     SingleDependentArgs,
     singleDependentProvider
 } from "../../src/dependent";
+import { SingleDependentImpl } from "../../src/dependent/single-dependent-impl";
 import { IndyError, RunnerEventData } from "../../src/events";
+import { Package, PackageLiveArgs } from "../../src/package";
+import { join } from "path";
 
 const mockDependent = (args: Partial<SingleDependentArgs> = {}) => {
     const defaultArgs = {
@@ -30,6 +34,24 @@ const mockDependent = (args: Partial<SingleDependentArgs> = {}) => {
     );
 
     return { dependent, ...combinedArgs };
+};
+
+const dummyPkgLiveProvider = (path: string, pkg: Partial<Package>) => (
+    args: PackageLiveArgs
+) => {
+    const cwdPath = join(process.cwd(), path, "package.json");
+
+    if (args.path !== cwdPath) {
+        console.error(`Invalid path: ${args.path} !== ${cwdPath}`);
+        throw new Error();
+    }
+
+    const pkgLive: PackageLive = {
+        refresh: jest.fn(),
+        toStatic: jest.fn().mockReturnValue(pkg)
+    };
+
+    return pkgLive;
 };
 
 describe("Dependent", () => {
@@ -294,15 +316,14 @@ describe("Dependent", () => {
             let errorHappened = false;
 
             try {
-                await dependent.swapDependency("@jcowman/foo", "../foo");
+                await dependent.swapDependency("../foo", true);
             } catch (e) {
                 errorHappened = true;
             }
 
             expect(errorHappened).toBeTruthy();
-            expect((emitter.emit as any).mock.calls[0][0].code).toBe(208);
             expect((emitter.emitAndThrow as any).mock.calls[0][0].code).toBe(
-                404
+                406
             );
 
             done();
@@ -325,10 +346,15 @@ describe("Dependent", () => {
                 } as any
             });
 
+            (dependent as SingleDependentImpl).pkgLiveProvider = dummyPkgLiveProvider(
+                "../foo",
+                { name: "@jcowman/foo" }
+            );
+
             let errorHappened = false;
 
             try {
-                await dependent.swapDependency("@jcowman/foo", "../foo");
+                await dependent.swapDependency("../foo", true);
             } catch (e) {
                 errorHappened = true;
             }
@@ -357,7 +383,12 @@ describe("Dependent", () => {
                 } as any
             });
 
-            await dependent.swapDependency("@jcowman/foo", "../foo");
+            (dependent as SingleDependentImpl).pkgLiveProvider = dummyPkgLiveProvider(
+                "../foo",
+                { name: "@jcowman/foo" }
+            );
+
+            await dependent.swapDependency("../foo", true);
 
             expect(processManager.spawnSequence).toHaveBeenCalledWith([
                 "npm uninstall @jcowman/foo",
@@ -393,10 +424,15 @@ describe("Dependent", () => {
                 }
             });
 
+            (dependent as SingleDependentImpl).pkgLiveProvider = dummyPkgLiveProvider(
+                "../foo",
+                { name: "@jcowman/foo" }
+            );
+
             let errorHappened = false;
 
             try {
-                await dependent.swapDependency("@jcowman/foo", "../foo");
+                await dependent.swapDependency("../foo", true);
             } catch (e) {
                 errorHappened = true;
             }

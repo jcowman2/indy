@@ -22,17 +22,13 @@ describe("e2e: Dependent -- trial", () => {
     });
 
     afterEach(async done => {
-        await testClient.swapDependency(
-            "@jcowman/indy-broken-lib",
-            "@jcowman/indy-broken-lib"
-        );
+        await testClient.swapDependency("@jcowman/indy-broken-lib", false);
         testRunner.reset();
         done();
     });
 
     test("Dependent -- trial", async done => {
         await testClient.trial({
-            dependency: "@jcowman/indy-broken-lib",
             replacement: "../indy-fixed-lib",
             expectInitialFailure: true
         });
@@ -44,7 +40,6 @@ describe("e2e: Dependent -- trial", () => {
 
     test("Dependent -- trialFix", async done => {
         await testClient.trialFix({
-            dependency: "@jcowman/indy-broken-lib",
             replacement: "../indy-fixed-lib"
         });
         done();

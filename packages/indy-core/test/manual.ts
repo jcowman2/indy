@@ -41,11 +41,11 @@ const newRunner = () => {
         console.log("tests failed, as expected");
     }
 
-    await indy.swapDependency("../../../demo/indy-fixed-lib");
+    await indy.swapDependency("../../../demo/indy-fixed-lib", true);
 
     await indy.test(); // Should run successfully now.
 
-    await indy.swapDependency("@jcowman/indy-broken-lib");
+    await indy.swapDependency("@jcowman/indy-broken-lib", false);
 
     if (PRINT_RECORDS) {
         console.log("INFO", info);

@@ -56,7 +56,7 @@ export interface Dependent {
      * @returns A promise which resolves to true if the new dependency has a
      * different version than the old one, false otherwise.
      */
-    swapDependency(replacement: string): Promise<boolean>;
+    swapDependency(replacement: string, isLocalDir: boolean): Promise<boolean>;
 
     reset(): Promise<void>; // TODO
     update(): Promise<boolean>; // TODO

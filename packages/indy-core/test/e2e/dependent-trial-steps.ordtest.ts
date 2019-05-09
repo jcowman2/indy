@@ -22,10 +22,7 @@ describe("e2e: Dependent -- trial steps", () => {
     });
 
     afterAll(async done => {
-        await testClient.swapDependency(
-            "@jcowman/indy-broken-lib",
-            "@jcowman/indy-broken-lib"
-        );
+        await testClient.swapDependency("@jcowman/indy-broken-lib", false);
         done();
     });
 
@@ -46,8 +43,8 @@ describe("e2e: Dependent -- trial steps", () => {
         }
 
         await testClient.swapDependency(
-            "@jcowman/indy-broken-lib",
-            "../indy-fixed-lib" // Relative to where we're running the CLI from: indy-broken-lib
+            "./demo/indy-fixed-lib", // Relative to where we're running the CLI from
+            true
         );
 
         await testClient.test(); // Should run successfully now.
