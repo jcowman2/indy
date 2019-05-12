@@ -116,6 +116,7 @@ describe("Dependent", () => {
             const { dependent, emitter } = mockDependent({
                 initCommands: [failingCommand],
                 processManager: {
+                    workingDirectory: process.cwd(),
                     spawnSequence: jest
                         .fn()
                         .mockImplementation((commands: string[]) => {
@@ -197,6 +198,7 @@ describe("Dependent", () => {
             const { dependent, emitter } = mockDependent({
                 buildCommands: [failingCommand],
                 processManager: {
+                    workingDirectory: process.cwd(),
                     spawnSequence: jest
                         .fn()
                         .mockImplementation((commands: string[]) => {
@@ -280,6 +282,7 @@ describe("Dependent", () => {
             const { dependent, emitter } = mockDependent({
                 testCommands: [failingCommand],
                 processManager: {
+                    workingDirectory: process.cwd(),
                     spawnSequence: jest
                         .fn()
                         .mockImplementation((commands: string[]) => {
@@ -380,15 +383,20 @@ describe("Dependent", () => {
                         }
                     })),
                     _loadPackage: jest.fn()
-                } as any
+                } as any,
+                processManager: {
+                    workingDirectory: join(process.cwd(), "bar"),
+                    spawnCommand: jest.fn(),
+                    spawnSequence: jest.fn()
+                }
             });
 
             (dependent as SingleDependentImpl).pkgLiveProvider = dummyPkgLiveProvider(
-                "../foo",
+                "./foo",
                 { name: "@jcowman/foo" }
             );
 
-            await dependent.swapDependency("../foo", true);
+            await dependent.swapDependency("./foo", true);
 
             expect(processManager.spawnSequence).toHaveBeenCalledWith([
                 "npm uninstall @jcowman/foo",
@@ -417,6 +425,7 @@ describe("Dependent", () => {
                     _loadPackage: jest.fn()
                 } as any,
                 processManager: {
+                    workingDirectory: process.cwd(),
                     spawnSequence: jest.fn().mockImplementationOnce(() => {
                         throw new Error("err");
                     }),

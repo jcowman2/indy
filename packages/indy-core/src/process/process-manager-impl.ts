@@ -7,7 +7,7 @@ import {
 } from "./interfaces";
 
 export class ProcessManagerImpl implements ProcessManager {
-    public workingDirectory: string;
+    public readonly workingDirectory: string;
     public emitter: Emitter;
 
     constructor(args: ProcessManagerArgs) {

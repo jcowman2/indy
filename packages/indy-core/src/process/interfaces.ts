@@ -1,6 +1,7 @@
 import { Emitter } from "../events";
 
 export interface ProcessManager {
+    readonly workingDirectory: string;
     spawnCommand(command: string): Promise<CommandResult>;
     spawnSequence(commands: string[], bail?: boolean): Promise<void>;
 }

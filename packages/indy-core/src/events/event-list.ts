@@ -167,11 +167,13 @@ export const EVENT_LIST = {
             pkgName: string,
             dependencyName: string,
             originalVersion: string,
-            desiredVersion: string
+            desiredVersion: string,
+            cause?: Error
         ) => ({
             code: 405,
             message: `${pkgName}'s ${dependencyName} dependency could not be swapped from ${originalVersion} to ${desiredVersion}.\n`,
-            type: error
+            type: error,
+            cause
         }),
         COULD_NOT_RESOLVE_PACKAGE: (packagePath: string, cause?: Error) => ({
             code: 406,

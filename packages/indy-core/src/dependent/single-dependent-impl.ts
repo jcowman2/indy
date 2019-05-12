@@ -5,7 +5,7 @@
  * Licensed under MIT License (see https://github.com/jcowman2/indy)
  */
 
-import { join } from "path";
+import { join, relative } from "path";
 import { Emitter, EVENT_LIST } from "../events";
 import { PackageLive, packageLiveProvider } from "../package";
 import { ProcessManager } from "../process";
@@ -146,53 +146,68 @@ export class SingleDependentImpl implements SingleDependent {
     }
 
     public async swapDependency(replacement: string, isLocalDir: boolean) {
-        const dependency = isLocalDir
+        const dependencyName = isLocalDir
             ? (await this._loadPackage(replacement)).name
             : replacement;
 
         this.emitter.emit(
-            EVENT_LIST.INFO.DEPENDENT_SWAP_START(this.pkg.name, dependency)
+            EVENT_LIST.INFO.DEPENDENT_SWAP_START(this.pkg.name, dependencyName)
         );
 
         if (
             !(
                 this.pkg &&
                 this.pkg.dependencies &&
-                this.pkg.dependencies[dependency]
+                this.pkg.dependencies[dependencyName]
             )
         ) {
             this.emitter.emitAndThrow(
-                EVENT_LIST.ERROR.DEPENDENCY_NOT_FOUND(this.pkg.name, dependency)
+                EVENT_LIST.ERROR.DEPENDENCY_NOT_FOUND(
+                    this.pkg.name,
+                    dependencyName
+                )
             );
         }
 
-        const originalVersion = this.pkg.dependencies[dependency];
+        const originalVersion = this.pkg.dependencies[dependencyName];
 
         try {
+            let installTarget: string;
+            if (isLocalDir) {
+                const cwdPath = join(process.cwd(), replacement);
+                installTarget = relative(
+                    this.processManager.workingDirectory,
+                    cwdPath
+                );
+            } else {
+                installTarget = replacement;
+            }
+
             await this.processManager.spawnSequence([
-                `npm uninstall ${dependency}`,
-                `npm install ${replacement}`
+                `npm uninstall ${dependencyName}`,
+                `npm install ${installTarget}`
             ]);
 
             await this.pkgLive.refresh();
-            const newVersion = this.pkg.dependencies[dependency];
+            const newVersion = this.pkg.dependencies[dependencyName];
 
             this.emitter.emit(
                 EVENT_LIST.INFO.DEPENDENT_SWAP_SUCCESSFUL(
                     this.pkg.name,
-                    dependency,
+                    dependencyName,
                     originalVersion,
                     newVersion
                 )
             );
             return originalVersion !== newVersion;
-        } catch (e) {
+        } catch (error) {
             return this.emitter.emitAndThrow(
                 EVENT_LIST.ERROR.DEPENDENCY_SWAP_FAILED(
                     this.pkg.name,
-                    dependency,
+                    dependencyName,
                     originalVersion,
-                    replacement
+                    replacement,
+                    error
                 )
             );
         }
@@ -273,6 +288,10 @@ export class SingleDependentImpl implements SingleDependent {
         return original;
     }
 
+    /**
+     * Load a static `Package` from the given relative path.
+     * @param path Path relative to the Node cwd to the directory containing the `package.json`.
+     */
     private async _loadPackage(path: string) {
         const pkgPath = join(process.cwd(), path, "package.json");
 
