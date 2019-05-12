@@ -33,8 +33,8 @@ export class Runner implements IRunner {
         this._configManager = configManagerProvider();
     }
 
-    public async load(pkg: string, args?: RunnerLoadArgs) {
-        const config = this._configManager.getConfig(pkg, args);
+    public async load(args: RunnerLoadArgs) {
+        const config = this._configManager.getConfig(args);
         const dependent = await this._store.loadDependent(config);
         const combination = Object.assign(dependent, this);
         return combination;

@@ -6,7 +6,7 @@ import {
 import { RunnerEvent, RunnerEventData } from "../events";
 
 export interface IRunner {
-    load(pkg: string, args?: RunnerLoadArgs): Promise<RunnerFluent>;
+    load(args: RunnerLoadArgs): Promise<RunnerFluent>;
     loadAll(
         globs?: string[],
         args?: RunnerLoadArgs
@@ -20,7 +20,7 @@ export interface RunnerArgs {
 }
 
 export interface RunnerLoadArgs extends DependentScriptStages {
-    path: string;
+    package: string;
 }
 
 export type RunnerFluent = SingleDependent & IRunner;

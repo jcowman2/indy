@@ -2,8 +2,11 @@
   "name": "@jcowman/indy-broken-lib",
   "private": true,
   "version": "1.0.1",
-  "description": "Intentionally broken library to demonstrate an Indy use-case",
+  "description": "Staged, fixed version of @jcowman/indy-broken-lib to demonstrate indy's trial feature.",
   "author": "Joe Cowman <joe.r.cowman@gmail.com> (http://joecowman.com)",
   "license": "MIT",
-  "main": "index.js"
+  "main": "index.js",
+  "scripts": {
+    "indy-trial": "../../packages/indy-cli/bin/indy trial ../indy-test-client"
+  }
 }

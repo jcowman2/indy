@@ -8,8 +8,8 @@ let testClient: Dependent;
 
 describe("e2e: Dependent -- trial steps", () => {
     beforeAll(async done => {
-        testClient = await testRunner.runner.load("indy-test-client", {
-            path: "./demo/indy-test-client",
+        testClient = await testRunner.runner.load({
+            package: "./demo/indy-test-client",
             initCommands: [
                 'echo "my first init command"',
                 'echo "my second init command"',

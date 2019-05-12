@@ -25,8 +25,8 @@ const newRunner = () => {
 };
 
 (async () => {
-    const indy = await newRunner().load("indy-test-client", {
-        path: "../../../demo/indy-test-client",
+    const indy = await newRunner().load({
+        package: "../../../demo/indy-test-client",
         initCommands: ["npm install"],
         buildCommands: [],
         testCommands: ["npm test"]

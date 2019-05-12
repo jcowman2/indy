@@ -17,9 +17,9 @@ program.version(pkg.version, "-v, --version").description(description);
 
 // TODO
 const indy = new Runner()
-    .on("error", data => console.log(data))
-    .on("warning", data => console.log(data))
-    .on("info", data => console.log(data));
+    .on("error", data => console.log(data.message))
+    .on("warning", data => console.log(data.message))
+    .on("info", data => console.log(data.message));
 
 trialCommand(program, indy);
 
