@@ -29,7 +29,7 @@ describe("e2e: Dependent -- trial", () => {
 
     test("Dependent -- trial", async done => {
         await testClient.trial({
-            replacement: "../indy-fixed-lib",
+            replacement: "demo/indy-fixed-lib",
             expectInitialFailure: true
         });
 
@@ -40,7 +40,7 @@ describe("e2e: Dependent -- trial", () => {
 
     test("Dependent -- trialFix", async done => {
         await testClient.trialFix({
-            replacement: "../indy-fixed-lib"
+            replacement: "demo/indy-fixed-lib"
         });
         done();
     });

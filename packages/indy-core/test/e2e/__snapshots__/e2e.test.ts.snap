@@ -48,7 +48,8 @@ One or more verification tests failed.
 
 exports[`e2e: Dependent -- trial Dependent -- trial 1`] = `
 "Refreshed live package at path '[PATH REMOVED]' Did change = true.
-Starting trial of @jcowman/indy-broken-lib@../indy-fixed-lib for @jcowman/indy-test-client...
+Refreshed live package at path '[PATH REMOVED]' Did change = true.
+Starting trial of @jcowman/indy-broken-lib@demo/indy-fixed-lib for @jcowman/indy-test-client...
 Initializing @jcowman/indy-test-client...
 Spawning command 'echo' with args [\\"my,first,init,command\\"] where cwd = [PATH REMOVED]\\"my first init command\\"
 Completed command 'echo \\"my first init command\\"' with exit code 0.
@@ -89,6 +90,7 @@ npm ERR! Test failed.  See above for more details.
 Command 'npm test' failed with exit code 1. Bail = true.
 An error occurred during 'npm test'. See output for more information.
 One or more verification tests failed.
+Refreshed live package at path '[PATH REMOVED]' Did change = true.
 Swapping @jcowman/indy-test-client's @jcowman/indy-broken-lib dependency...
 Spawning command 'npm' with args [uninstall,@jcowman/indy-broken-lib] where cwd = [PATH REMOVED]npm WARN @jcowman/indy-test-client@1.0.0 No description
 npm WARN @jcowman/indy-test-client@1.0.0 No repository field.
@@ -167,6 +169,7 @@ npm ERR! Test failed.  See above for more details.
 Command 'npm test' failed with exit code 1. Bail = true.
 An error occurred during 'npm test'. See output for more information.
 One or more verification tests failed.
+Refreshed live package at path '[PATH REMOVED]' Did change = true.
 Swapping @jcowman/indy-test-client's @jcowman/indy-broken-lib dependency...
 Spawning command 'npm' with args [uninstall,@jcowman/indy-broken-lib] where cwd = [PATH REMOVED]npm WARN @jcowman/indy-test-client@1.0.0 No description
 npm WARN @jcowman/indy-test-client@1.0.0 No repository field.
