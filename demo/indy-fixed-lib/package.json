@@ -7,6 +7,6 @@
   "license": "MIT",
   "main": "index.js",
   "scripts": {
-    "indy-trial": "../../packages/indy-cli/bin/indy trial ../indy-test-client"
+    "indy-trial": "../../packages/indy-cli/bin/indy trial ../indy-test-client --fix"
   }
 }

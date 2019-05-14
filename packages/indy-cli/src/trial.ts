@@ -11,6 +11,11 @@ export default (program: Command, indy: Runner) =>
             "-p --pkg <path>",
             "root directory (contains the package.json file) of the staged package. Defaults to the current working directory."
         )
+        .option(
+            "-t --test <commands>",
+            'semicolon-delimited list of verification test commands to run. Defaults to "npm test".'
+        )
+        .option("-f --fix", "expect the initial run to fail.")
         .action(async (dependent, args) => {
             let pkg = ".";
             if (args.pkg) {
@@ -20,7 +25,13 @@ export default (program: Command, indy: Runner) =>
             // TODO
             const initCommands = [];
             const buildCommands = [];
-            const testCommands = [];
+
+            let testCommands = ["npm test"];
+            if (args.test) {
+                testCommands = (args.test as string)
+                    .split(";")
+                    .map(s => s.trim());
+            }
 
             const dep = await indy.load({
                 package: dependent,
@@ -30,6 +41,7 @@ export default (program: Command, indy: Runner) =>
             });
 
             await dep.trial({
-                replacement: pkg
-            }); // TODO
+                replacement: pkg,
+                expectInitialFailure: args.fix
+            });
         });
