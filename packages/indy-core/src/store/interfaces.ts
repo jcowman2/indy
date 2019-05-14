@@ -1,3 +1,10 @@
+/*
+ * Interfaces for the private `store` component.
+ *
+ * Copyright (c) Joseph R Cowman
+ * Licensed under MIT License (see https://github.com/jcowman2/indy)
+ */
+
 import { DependentConfig } from "../config";
 import { SingleDependent } from "../dependent";
 import { Emitter } from "../events";

@@ -1,3 +1,10 @@
+/*
+ * Contains the default internal implementation for `Store`.
+ *
+ * Copyright (c) Joseph R Cowman
+ * Licensed under MIT License (see https://github.com/jcowman2/indy)
+ */
+
 import { join } from "path";
 import { DependentConfig } from "../config";
 import { SingleDependent, singleDependentProvider } from "../dependent";

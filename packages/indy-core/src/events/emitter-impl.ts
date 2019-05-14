@@ -1,3 +1,10 @@
+/*
+ * Contains the default internal implementation for `Emitter`.
+ *
+ * Copyright (c) Joseph R Cowman
+ * Licensed under MIT License (see https://github.com/jcowman2/indy)
+ */
+
 import * as _Emittery from "emittery";
 import { EVENT_LIST } from "./event-list";
 import { IndyError } from "./indy-error";

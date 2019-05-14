@@ -1,3 +1,10 @@
+/*
+ * Contains the `trial` command, which trials a staged package with a locally installed dependent.
+ *
+ * Copyright (c) Joseph R Cowman
+ * Licensed under MIT License (see https://github.com/jcowman2/indy)
+ */
+
 import { Command } from "commander";
 import { Runner } from "indy-core";
 

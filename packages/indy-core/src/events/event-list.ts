@@ -1,3 +1,10 @@
+/*
+ * Contains Indy's events list.
+ *
+ * Copyright (c) Joseph R Cowman
+ * Licensed under MIT License (see https://github.com/jcowman2/indy)
+ */
+
 // tslint:disable: object-literal-sort-keys
 
 const debug = "debug";
@@ -5,6 +12,18 @@ const info = "info";
 const warning = "warning";
 const error = "error";
 
+/**
+ * The complete list of events which can be emitted by Indy.
+ *
+ * These event codes are considered part of the tool's public API,
+ * so it's safe to make checks for certain event codes.
+ *
+ * Codes:
+ * * `DEBUG`: 1xx
+ * * `INFO`: 2xx
+ * * `WARNING`: 3xx
+ * * `ERROR`: 4xx
+ */
 export const EVENT_LIST = {
     // Debug Events: 1*
     DEBUG: {

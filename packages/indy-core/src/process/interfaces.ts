@@ -1,3 +1,10 @@
+/*
+ * Private interfaces for the `process` component.
+ *
+ * Copyright (c) Joseph R Cowman
+ * Licensed under MIT License (see https://github.com/jcowman2/indy)
+ */
+
 import { Emitter } from "../events";
 
 export interface ProcessManager {

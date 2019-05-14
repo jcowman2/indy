@@ -1,3 +1,10 @@
+/*
+ * Contains the default internal implementation for `ProcessManager`.
+ *
+ * Copyright (c) Joseph R Cowman
+ * Licensed under MIT License (see https://github.com/jcowman2/indy)
+ */
+
 import { spawn } from "child_process";
 import { Emitter, EVENT_LIST } from "../events";
 import {

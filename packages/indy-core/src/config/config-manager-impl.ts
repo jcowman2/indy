@@ -1,3 +1,10 @@
+/*
+ * Contains the default internal implementation for `ConfigManager`.
+ *
+ * Copyright (c) Joseph R Cowman
+ * Licensed under MIT License (see https://github.com/jcowman2/indy)
+ */
+
 import { RunnerLoadArgs } from "../runner";
 import { ConfigManager, DependentConfig } from "./interfaces";
 
