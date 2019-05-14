@@ -184,8 +184,8 @@ export class SingleDependentImpl implements SingleDependent {
             }
 
             await this.processManager.spawnSequence([
-                `npm uninstall ${dependencyName}`,
-                `npm install ${installTarget}`
+                `npm uninstall ${dependencyName} --no-audit`,
+                `npm install ${installTarget} --no-audit`
             ]);
 
             await this.pkgLive.refresh();

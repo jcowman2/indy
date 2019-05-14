@@ -399,8 +399,8 @@ describe("Dependent", () => {
             await dependent.swapDependency("./foo", true);
 
             expect(processManager.spawnSequence).toHaveBeenCalledWith([
-                "npm uninstall @jcowman/foo",
-                "npm install ../foo"
+                "npm uninstall @jcowman/foo --no-audit",
+                "npm install ../foo --no-audit"
             ]);
 
             const emitterCalls = (emitter.emit as any).mock.calls;
@@ -448,8 +448,8 @@ describe("Dependent", () => {
 
             expect(errorHappened).toBeTruthy();
             expect(processManager.spawnSequence).toHaveBeenCalledWith([
-                "npm uninstall @jcowman/foo",
-                "npm install ../foo"
+                "npm uninstall @jcowman/foo --no-audit",
+                "npm install ../foo --no-audit"
             ]);
             expect((emitter.emit as any).mock.calls[0][0].code).toBe(208);
             expect((emitter.emitAndThrow as any).mock.calls[0][0].code).toBe(

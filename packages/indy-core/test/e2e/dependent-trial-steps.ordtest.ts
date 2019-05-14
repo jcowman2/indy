@@ -13,7 +13,7 @@ describe("e2e: Dependent -- trial steps", () => {
             initCommands: [
                 'echo "my first init command"',
                 'echo "my second init command"',
-                "npm install"
+                "npm install --no-audit"
             ],
             buildCommands: ['echo "my build command"'],
             testCommands: ["npm test"]
