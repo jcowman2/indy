@@ -1,6 +1,16 @@
 import { Command } from "commander";
 import { Runner } from "indy-core";
 
+const splitCommands = arg => {
+    if (typeof arg !== "string") {
+        throw new Error(
+            `Argument must be of type string. Was type ${typeof arg}.`
+        );
+    } else {
+        return arg.split(";").map(s => s.trim());
+    }
+};
+
 export default (program: Command, indy: Runner) =>
     program
         .command("trial <dependent>")
@@ -10,6 +20,14 @@ export default (program: Command, indy: Runner) =>
         .option(
             "-p --pkg <path>",
             "root directory (contains the package.json file) of the staged package. Defaults to the current working directory."
+        )
+        .option(
+            "-i --init <commands>",
+            "semicolon-delimited list of commands to run when the package is installed."
+        )
+        .option(
+            "-b --build <commands>",
+            "semicolon-delimited list of commands to run whenever the package's dependencies to change."
         )
         .option(
             "-t --test <commands>",
@@ -22,15 +40,19 @@ export default (program: Command, indy: Runner) =>
                 pkg = args.pkg;
             }
 
-            // TODO
-            const initCommands = [];
-            const buildCommands = [];
+            let initCommands = [];
+            if (args.init) {
+                initCommands = splitCommands(args.init);
+            }
+
+            let buildCommands = [];
+            if (args.build) {
+                buildCommands = splitCommands(args.build);
+            }
 
             let testCommands = ["npm test"];
             if (args.test) {
-                testCommands = (args.test as string)
-                    .split(";")
-                    .map(s => s.trim());
+                testCommands = splitCommands(args.test);
             }
 
             const dep = await indy.load({
