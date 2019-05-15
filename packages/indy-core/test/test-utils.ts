@@ -1,6 +1,55 @@
 import { isAbsolute } from "path";
 import { Runner, RunnerEventData } from "../";
 
+// tslint:disable max-classes-per-file
+
+/**
+ * Tests the sequence of events generated in an e2e test.
+ * Collapses multiple sequential events of the same code into one.
+ */
+export class EventTestRunner {
+    public runner: Runner;
+    public out: string[];
+
+    constructor(testDebug = false) {
+        this.out = [];
+
+        let runner = new Runner()
+            .on("info", data => this._handleData(data))
+            .on("error", data => this._handleData(data));
+        if (testDebug) {
+            runner = runner.on("debug", data => this._handleData(data));
+        }
+        this.runner = runner;
+    }
+
+    public reset() {
+        this.out = [];
+    }
+
+    public testSnapshot() {
+        const collapsed = [];
+        let mostRecent;
+        for (const i of this.out) {
+            if (i !== mostRecent) {
+                collapsed.push(i);
+                mostRecent = i;
+            }
+        }
+
+        expect(collapsed.join("\n")).toMatchSnapshot();
+    }
+
+    private _handleData(data: RunnerEventData) {
+        const value =
+            data.type === "error"
+                ? `** ERROR: ${data.code} **`
+                : `${data.code}`;
+        this.out.push(value);
+    }
+}
+
+// LEGACY
 export class TestableRunner {
     public runner: Runner;
     public out: string;
@@ -35,26 +84,42 @@ export class TestableRunner {
     }
 
     public removeCarriageReturns(str: string) {
-        // return str.replace(/\r\n|\r/g, "\n");
+        return str.replace(/\r\n|\r/g, "\n");
         // return str.replace(/\s\s+/g, " ");
-        return str;
+        // return str;
     }
 
     public removeIndeterminateValues(str: string) {
         return str
             .split(" ")
             .map(word => {
-                // Remove paths
+                let singleQuotes = false;
+                if (word.match(/'.*'/)) {
+                    singleQuotes = true;
+                    word = word.substring(1, word.length - 1);
+                }
+
+                let result = word;
+
                 if (word.startsWith("/") && isAbsolute(word)) {
-                    return "[PATH REMOVED]";
+                    // Remove paths
+                    result = "[PATH REMOVED]";
+                } else if (word.match(/\(?[0-9]+m?s\)?/)) {
+                    // Remove times
+                    result = "[TIME REMOVED]";
                 }
-                // Remove times
-                if (word.match(/\(?[0-9]+m?s\)?/)) {
-                    return "[TIME REMOVED]";
+
+                if (singleQuotes) {
+                    result = `'${result}'`;
                 }
-                return word;
+
+                return result;
             })
             .join(" ");
+    }
+
+    public reset() {
+        this.out = "";
     }
 
     private _handleData(data: RunnerEventData, error: boolean = false) {

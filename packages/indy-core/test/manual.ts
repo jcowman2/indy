@@ -25,8 +25,8 @@ const newRunner = () => {
 };
 
 (async () => {
-    const indy = await newRunner().load("indy-test-client", {
-        path: "../../../demo/indy-test-client",
+    const indy = await newRunner().load({
+        package: "../../../demo/indy-test-client",
         initCommands: ["npm install"],
         buildCommands: [],
         testCommands: ["npm test"]
@@ -41,17 +41,11 @@ const newRunner = () => {
         console.log("tests failed, as expected");
     }
 
-    await indy.swapDependency(
-        "@jcowman/indy-broken-lib",
-        "../indy-fixed-lib" // Relative to where we're running the CLI from: indy-broken-lib
-    );
+    await indy.swapDependency("../../../demo/indy-fixed-lib", true);
 
     await indy.test(); // Should run successfully now.
 
-    await indy.swapDependency(
-        "@jcowman/indy-broken-lib",
-        "@jcowman/indy-broken-lib"
-    );
+    await indy.swapDependency("@jcowman/indy-broken-lib", false);
 
     if (PRINT_RECORDS) {
         console.log("INFO", info);

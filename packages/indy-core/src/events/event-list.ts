@@ -1,3 +1,10 @@
+/*
+ * Contains Indy's events list.
+ *
+ * Copyright (c) Joseph R Cowman
+ * Licensed under MIT License (see https://github.com/jcowman2/indy)
+ */
+
 // tslint:disable: object-literal-sort-keys
 
 const debug = "debug";
@@ -5,6 +12,18 @@ const info = "info";
 const warning = "warning";
 const error = "error";
 
+/**
+ * The complete list of events which can be emitted by Indy.
+ *
+ * These event codes are considered part of the tool's public API,
+ * so it's safe to make checks for certain event codes.
+ *
+ * Codes:
+ * * `DEBUG`: 1xx
+ * * `INFO`: 2xx
+ * * `WARNING`: 3xx
+ * * `ERROR`: 4xx
+ */
 export const EVENT_LIST = {
     // Debug Events: 1*
     DEBUG: {
@@ -12,6 +31,11 @@ export const EVENT_LIST = {
             code: 100,
             message,
             payload,
+            type: debug
+        }),
+        PACKAGE_REFRESHED: (path: string, didChange: boolean) => ({
+            code: 101,
+            message: `Refreshed live package at path '${path}'. Did change = ${didChange}.\n`,
             type: debug
         }),
         SEQUENCE_CMD_COMPLETE: (command: string, exitCode: number) => ({
@@ -96,6 +120,15 @@ export const EVENT_LIST = {
             code: 210,
             message: data,
             type: info
+        }),
+        DEPENDENT_TRIAL_START: (
+            pkgName: string,
+            dependencyName: string,
+            replacementPath: string
+        ) => ({
+            code: 211,
+            message: `Starting trial of ${dependencyName}@${replacementPath} for ${pkgName}...\n`,
+            type: info
         })
     },
 
@@ -104,6 +137,16 @@ export const EVENT_LIST = {
         CUSTOM: (message: string) => ({
             code: 300,
             message,
+            type: warning
+        }),
+        DEPENDENT_NOT_INITIALIZED: (name: string, stage: string) => ({
+            code: 301,
+            message: `${name} has not been initialized. Running the ${stage} commands may have undesired behavior.\n`,
+            type: warning
+        }),
+        DEPENDENT_NOT_BUILT: (name: string, stage: string) => ({
+            code: 302,
+            message: `${name} has not been built. Running the ${stage} commands may have undesired behavior.\n`,
             type: warning
         })
     },
@@ -143,17 +186,30 @@ export const EVENT_LIST = {
             pkgName: string,
             dependencyName: string,
             originalVersion: string,
-            desiredVersion: string
+            desiredVersion: string,
+            cause?: Error
         ) => ({
             code: 405,
             message: `${pkgName}'s ${dependencyName} dependency could not be swapped from ${originalVersion} to ${desiredVersion}.\n`,
-            type: error
+            type: error,
+            cause
         }),
-        COULD_NOT_LOAD_PACKAGE: (packagePath: string, cause?: Error) => ({
+        COULD_NOT_RESOLVE_PACKAGE: (packagePath: string, cause?: Error) => ({
             code: 406,
             message: `Could not resolve a package.json file at '${packagePath}'.\n`,
             type: error,
             cause
+        }),
+        COULD_NOT_LOAD_DEPENDENT: (path: string, cause?: Error) => ({
+            code: 407,
+            message: `An error occurred while loading a dependent at '${path}'.\n`,
+            type: error,
+            cause
+        }),
+        DEPENDENT_TRIAL_EXPECTED_FAILURE: (name: string) => ({
+            code: 408,
+            message: `Expected ${name}'s verification tests to fail during trial, but they passed.\n`,
+            type: error
         }),
         SPAWN_COMMAND_STDERR: (data: string) => ({
             code: 410,

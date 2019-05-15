@@ -1,0 +1,74 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`e2e: Dependent -- trial Dependent -- passing 1`] = `
+"209
+201
+210
+** ERROR: 410 **
+210
+202
+203
+210
+204
+205
+210
+** ERROR: 410 **
+** ERROR: 411 **
+** ERROR: 403 **"
+`;
+
+exports[`e2e: Dependent -- trial Dependent -- trial 1`] = `
+"211
+201
+210
+** ERROR: 410 **
+210
+202
+203
+210
+204
+205
+210
+** ERROR: 410 **
+** ERROR: 411 **
+** ERROR: 403 **
+208
+** ERROR: 410 **
+210
+** ERROR: 410 **
+210
+209
+205
+210
+206
+208
+** ERROR: 410 **
+210
+** ERROR: 410 **
+210
+209"
+`;
+
+exports[`e2e: Dependent -- trial steps Dependent -- trial steps 1`] = `
+"201
+210
+** ERROR: 410 **
+210
+202
+203
+210
+204
+205
+210
+** ERROR: 410 **
+** ERROR: 411 **
+** ERROR: 403 **
+208
+** ERROR: 410 **
+210
+** ERROR: 410 **
+210
+209
+205
+210"
+`;

@@ -1,25 +1,6 @@
 # indy-core
 *An automatic regression finder, remote bug reproducer, and hotfix tester for Node packages*
 
-## Use Cases
-1. As a maintainer for a popular Node package, I want to test that several projects which depend on my package do not fail when it is upgraded to the version I intend to publish.
-2. As a maintainer for a Node package, I want to be able to easily reproduce bugs reported by developers who dependen on my package in their own projects and receive meaningful output.
-3. As a maintainer for a Node package, I want to be able to easily check that a potential change to my package fixes the bug reported by a developer in their own repository.
-4. As a busy developer, I want my regressions tests to run as quickly as possible.
-5. As a busy developer, I want the testing tool to be easy to learn and produce positive results without much configuration.
-
-## Requirements
-* Must clone a repository from GitHub.
-* Must load a package from the user's file system.
-* Must run arbitrary scripts in the loaded package.
-* Must allow specifying different "stages" of scripts:
-    * Init: Run when the package is loaded for the first time.
-    * Build: Run when the package's dependencies change.
-    * Test: Run to test the package's behavior.
-* Must allow loading a single package via the API.
-* Must allow each stage of scripts to be run separately.
-
-
 ## API
 
 ```ts
@@ -121,3 +102,5 @@ testPackage.trialFix(); // Shorthand for the above line
 testPackage.passing();
 testPackage.failing();
 ```
+
+*Copyright (c) Joe Cowman*
