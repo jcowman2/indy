@@ -1,6 +1,55 @@
 import { isAbsolute } from "path";
 import { Runner, RunnerEventData } from "../";
 
+// tslint:disable max-classes-per-file
+
+/**
+ * Tests the sequence of events generated in an e2e test.
+ * Collapses multiple sequential events of the same code into one.
+ */
+export class EventTestRunner {
+    public runner: Runner;
+    public out: string[];
+
+    constructor(testDebug = false) {
+        this.out = [];
+
+        let runner = new Runner()
+            .on("info", data => this._handleData(data))
+            .on("error", data => this._handleData(data));
+        if (testDebug) {
+            runner = runner.on("debug", data => this._handleData(data));
+        }
+        this.runner = runner;
+    }
+
+    public reset() {
+        this.out = [];
+    }
+
+    public testSnapshot() {
+        const collapsed = [];
+        let mostRecent;
+        for (const i of this.out) {
+            if (i !== mostRecent) {
+                collapsed.push(i);
+                mostRecent = i;
+            }
+        }
+
+        expect(collapsed.join("\n")).toMatchSnapshot();
+    }
+
+    private _handleData(data: RunnerEventData) {
+        const value =
+            data.type === "error"
+                ? `** ERROR: ${data.code} **`
+                : `${data.code}`;
+        this.out.push(value);
+    }
+}
+
+// LEGACY
 export class TestableRunner {
     public runner: Runner;
     public out: string;

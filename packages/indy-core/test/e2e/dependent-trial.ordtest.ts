@@ -1,9 +1,7 @@
 import { Dependent } from "../..";
-import { TestableRunner } from "../test-utils";
+import { EventTestRunner } from "../test-utils";
 
-const testRunner = new TestableRunner({
-    ignoreMessages: [/(removed|added|audited).*package/, /found.*vulnerabil/]
-});
+const testRunner = new EventTestRunner();
 let testClient: Dependent;
 
 describe("e2e: Dependent -- trial", () => {
