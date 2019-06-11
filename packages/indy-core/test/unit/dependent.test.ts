@@ -36,10 +36,14 @@ const mockDependent = (args: Partial<SingleDependentArgs> = {}) => {
     return { dependent, ...combinedArgs };
 };
 
-const dummyPkgLiveProvider = (path: string, pkg: Partial<Package>) => (
-    args: PackageLiveArgs
-) => {
-    const cwdPath = join(process.cwd(), path, "package.json");
+const dummyPkgLiveProvider = (
+    path: string,
+    pkg: Partial<Package>,
+    isLocalDir = true
+) => (args: PackageLiveArgs) => {
+    const cwdPath = isLocalDir
+        ? join(process.cwd(), path, "package.json")
+        : path;
 
     if (args.path !== cwdPath) {
         console.error(`Invalid path: ${args.path} !== ${cwdPath}`);
@@ -457,6 +461,24 @@ describe("Dependent", () => {
             );
 
             done();
+        });
+
+        test.skip("Don't resolve a path if isLocalDir is false", async done => {
+            const { dependent, emitter, processManager } = mockDependent({
+                pkg: {
+                    refresh: jest.fn(),
+                    toStatic: jest.fn().mockImplementation(() => ({
+                        name: "testPkg",
+                        version: "v1.0.0",
+                        dependencies: {
+                            "@jcowman/foo": "v1.0.0"
+                        }
+                    })),
+                    _loadPackage: jest.fn()
+                } as any
+            });
+
+            // TODO
         });
 
         test.skip("Resolve false if the current version and new version are the same", async done => {
