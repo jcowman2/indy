@@ -1,3 +1,4 @@
+import { join } from "path";
 import { PackageLive } from "../../dist/indy-core/src/package";
 import {
     SingleDependentArgs,
@@ -6,7 +7,6 @@ import {
 import { SingleDependentImpl } from "../../src/dependent/single-dependent-impl";
 import { IndyError, RunnerEventData } from "../../src/events";
 import { Package, PackageLiveArgs } from "../../src/package";
-import { join } from "path";
 
 const mockDependent = (args: Partial<SingleDependentArgs> = {}) => {
     const defaultArgs = {
@@ -463,8 +463,8 @@ describe("Dependent", () => {
             done();
         });
 
-        test.skip("Don't resolve a path if isLocalDir is false", async done => {
-            const { dependent, emitter, processManager } = mockDependent({
+        test("Don't resolve a path if isLocalDir is false", async () => {
+            const { dependent } = mockDependent({
                 pkg: {
                     refresh: jest.fn(),
                     toStatic: jest.fn().mockImplementation(() => ({
@@ -478,7 +478,34 @@ describe("Dependent", () => {
                 } as any
             });
 
-            // TODO
+            (dependent as SingleDependentImpl).pkgLiveProvider = () =>
+                ({} as any); // Will throw an error if pkgLiveProvider is called
+
+            await dependent.swapDependency("@jcowman/foo", false);
+        });
+
+        test("Spawn the correct install & uninstall commands when isLocalDir = false", async () => {
+            const { dependent, processManager } = mockDependent({
+                pkg: {
+                    refresh: jest.fn(),
+                    toStatic: jest.fn().mockImplementation(() => ({
+                        name: "testPkg",
+                        version: "v1.0.0",
+                        dependencies: {
+                            "@jcowman/foo": "v1.0.0"
+                        }
+                    })),
+                    _loadPackage: jest.fn()
+                } as any
+            });
+
+            await dependent.swapDependency("@jcowman/foo", false);
+
+            const spawnSequenceMock = processManager.spawnSequence;
+            expect(spawnSequenceMock).toHaveBeenCalledWith([
+                "npm uninstall @jcowman/foo --no-audit",
+                "npm install @jcowman/foo --no-audit"
+            ]);
         });
 
         test.skip("Resolve false if the current version and new version are the same", async done => {
