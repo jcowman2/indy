@@ -34,7 +34,7 @@ export default (program: Command, indy: Runner) =>
         )
         .option(
             "-b --build <commands>",
-            "semicolon-delimited list of commands to run whenever the package's dependencies to change."
+            "semicolon-delimited list of commands to run whenever the package's dependencies change."
         )
         .option(
             "-t --test <commands>",
